@@ -1,0 +1,48 @@
+# MQTT settings
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost:1883
+
+# Serial settings for SLZB-06
+serial:
+  adapter: ezsp
+  port: tcp://slzb-06.local:6638  # Will be updated by discovery script
+
+# Advanced settings
+advanced:
+  network_key: GENERATE
+  pan_id: GENERATE
+  channel: 15         # Can be adjusted based on network analysis
+  
+  # EZSP specific settings for SLZB-06
+  adapter_concurrent: 16
+  adapter_delay: 100
+  transmit_power: 20
+  
+  # Logging
+  log_level: info
+  log_output:
+    - console
+    - file
+
+# Device access configuration
+permit_join: false    # Security: enable only when pairing new devices
+
+# Frontend settings
+frontend:
+  port: 8080
+  host: 0.0.0.0      # Listen on all interfaces
+  auth_token: GENERATE
+
+# Availability reporting
+availability:
+  active: true
+  timeout: 10        # seconds
+
+# Device-specific configurations
+devices:
+  # Will be populated as devices are paired
+  # Example format:
+  # '0x00158d0001234567':
+  #   friendly_name: 'living_room_sensor'
+  #   retain: true

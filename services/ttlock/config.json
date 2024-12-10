@@ -1,0 +1,18 @@
+{
+    "locks": [
+        {
+            "id": "front_door",
+            "name": "Front Door",
+            "address": "",
+            "lockKey": "",
+            "lockVersion": 3
+        }
+    ],
+    "mqtt": {
+        "host": "localhost",
+        "port": 1883,
+        "topic_prefix": "ttlock"
+    },
+    "scan_interval": 30,
+    "connection_timeout": 10
+}

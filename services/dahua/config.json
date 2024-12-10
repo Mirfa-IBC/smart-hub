@@ -1,0 +1,23 @@
+{
+    "devices": [],
+    "mqtt": {
+        "host": "localhost",
+        "port": 1883,
+        "topic_prefix": "dahua"
+    },
+    "events": {
+        "enabled": true,
+        "types": [
+            "VideoMotion",
+            "DoorStatus",
+            "CallSignal",
+            "BackKeyLight",
+            "AudioMutation"
+        ]
+    },
+    "snapshots": {
+        "on_event": true,
+        "quality": 90,
+        "resolution": "1920x1080"
+    }
+}
