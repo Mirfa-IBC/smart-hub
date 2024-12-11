@@ -114,6 +114,7 @@ install_services() {
     # Copy service files
     log "Copying service files..."
     
+    log "Copying service files... $SOURCE_DIR/dahua/"*.py $DEST_DIR/dahua/"
     # Copy Dahua service
     cp "$SOURCE_DIR/dahua/"*.py "$DEST_DIR/dahua/"
     cp "$SOURCE_DIR/dahua/config.json" "$DEST_DIR/dahua/"
@@ -126,9 +127,10 @@ install_services() {
     cp "$SOURCE_DIR/zigbee2mqtt/config.yaml" "$DEST_DIR/zigbee2mqtt/"
     cp "$SOURCE_DIR/zigbee2mqtt/discover_slzb06.py" "$DEST_DIR/zigbee2mqtt/"
     
+    log "Copying service files... $SOURCE_DIR/update/service.py $DEST_DIR/update/"
     # Copy update config
     cp "$SOURCE_DIR/update/config.yaml" "$DEST_DIR/update/"
-    cp "$SOURCE_DIR/update/*.py" "$DEST_DIR/update/"
+    cp "$SOURCE_DIR/update/service.py" "$DEST_DIR/update/"
 
     # Set correct permissions
     chown -R $SERVICE_USER:$SERVICE_USER "$DEST_DIR"
