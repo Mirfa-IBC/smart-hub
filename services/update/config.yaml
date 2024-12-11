@@ -1,0 +1,5 @@
+check_interval: 3600
+services:
+  - ttlock
+  - dahua
+  - zigbee2mqtt
