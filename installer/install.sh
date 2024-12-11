@@ -12,8 +12,8 @@ log "importing $SCRIPT_DIR/scripts/install.sh"
 source "$SCRIPT_DIR/scripts/install.sh"
 source "$SCRIPT_DIR/scripts/install_zigbee.sh"
 source "$SCRIPT_DIR/scripts/service_setup.sh"
-log "importing $SCRIPT_DIR/scripts/update_setup.sh"
-source "$SCRIPT_DIR/scripts/update_setup.sh"
+log "importing $SCRIPT_DIR/update_setup.sh"
+source "$SCRIPT_DIR/update_setup.sh"
 
 # Main installation steps
 check_prerequisites
