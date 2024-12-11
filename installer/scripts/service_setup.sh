@@ -130,7 +130,8 @@ install_services() {
     log "Copying service files... $SOURCE_DIR/update/service.py $DEST_DIR/update/"
     # Copy update config
     cp "$SOURCE_DIR/update/config.yaml" "$DEST_DIR/update/"
-    cp "$SOURCE_DIR/update/service.py" "$DEST_DIR/update/"
+    cp "$SOURCE_DIR/update/config.yaml" "$DEST_DIR/update/"
+    cp "$SOURCE_DIR/update/config.yaml" "$INSTALL_DIR/config/update/"
 
     # Set correct permissions
     chown -R $SERVICE_USER:$SERVICE_USER "$DEST_DIR"
