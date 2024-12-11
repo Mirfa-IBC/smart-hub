@@ -3,24 +3,18 @@ import asyncio
 import json
 import logging
 from datetime import datetime
+import paho.mqtt.client as mqtt
 import aiohttp
 import base64
-import os
-import hashlib
-import paho.mqtt.client as mqtt
-from typing import Dict, Optional
-from .discovery import DahuaDiscovery
 
 class DahuaService:
     def __init__(self):
         self.config_file = '/opt/smart-hub/config/dahua/config.json'
         self.logger = self._setup_logging()
         self.mqtt_client = None
-        self.session = None
-        self.discovery = DahuaDiscovery()
         self.config = self._load_config()
-        self.device_states = {}
-
+        self.session = None
+        
     def _setup_logging(self):
         logger = logging.getLogger('dahua_service')
         logger.setLevel(logging.INFO)
@@ -31,31 +25,13 @@ class DahuaService:
         logger.addHandler(handler)
         return logger
 
-    def _load_config(self) -> Dict:
+    def _load_config(self):
         try:
-            if os.path.exists(self.config_file):
-                with open(self.config_file, 'r') as f:
-                    return json.load(f)
-            return {
-                'devices': [],
-                'mqtt': {
-                    'host': 'localhost',
-                    'port': 1883,
-                    'topic_prefix': 'dahua'
-                }
-            }
+            with open(self.config_file, 'r') as f:
+                return json.load(f)
         except Exception as e:
             self.logger.error(f"Failed to load config: {e}")
             return {}
-
-    def _save_config(self):
-        """Save current configuration"""
-        try:
-            os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
-            with open(self.config_file, 'w') as f:
-                json.dump(self.config, f, indent=2)
-        except Exception as e:
-            self.logger.error(f"Failed to save config: {e}")
 
     def _setup_mqtt(self):
         self.mqtt_client = mqtt.Client()
@@ -63,12 +39,7 @@ class DahuaService:
         self.mqtt_client.on_message = self._on_mqtt_message
         
         try:
-            mqtt_config = self.config.get('mqtt', {})
-            self.mqtt_client.connect(
-                mqtt_config.get('host', 'localhost'),
-                mqtt_config.get('port', 1883),
-                60
-            )
+            self.mqtt_client.connect("localhost", 1883, 60)
         except Exception as e:
             self.logger.error(f"Failed to connect to MQTT: {e}")
 
@@ -84,7 +55,7 @@ class DahuaService:
         except Exception as e:
             self.logger.error(f"Error processing message: {e}")
 
-    async def _handle_command(self, topic: str, payload: Dict):
+    async def _handle_command(self, topic, payload):
         """Handle commands received via MQTT"""
         try:
             device_id = topic.split('/')[1]
@@ -93,86 +64,103 @@ class DahuaService:
             if command == 'snapshot':
                 await self._take_snapshot(device_id)
             elif command == 'record':
-                duration = payload.get('duration', 30)
+                duration = payload.get('duration', 30)  # default 30 seconds
                 await self._record_video(device_id, duration)
             else:
                 self.logger.warning(f"Unknown command: {command}")
         except Exception as e:
             self.logger.error(f"Error handling command: {e}")
 
-    def _get_device_config(self, device_id: str) -> Optional[Dict]:
+    async def _take_snapshot(self, device_id):
+        """Take a snapshot from the camera"""
+        device = self._get_device_config(device_id)
+        if not device:
+            return
+
+        try:
+            url = f"http://{device['ip']}/cgi-bin/snapshot.cgi"
+            auth = base64.b64encode(
+                f"{device['username']}:{device['password']}".encode()
+            ).decode()
+
+            async with self.session.get(
+                url, 
+                headers={"Authorization": f"Basic {auth}"}
+            ) as response:
+                if response.status == 200:
+                    image_data = await response.read()
+                    self._publish_snapshot(device_id, image_data)
+        except Exception as e:
+            self.logger.error(f"Error taking snapshot: {e}")
+
+    def _publish_snapshot(self, device_id, image_data):
+        """Publish snapshot to MQTT"""
+        topic = f"dahua/{device_id}/snapshot"
+        self.mqtt_client.publish(topic, image_data)
+
+    def _get_device_config(self, device_id):
         """Get device configuration"""
         for device in self.config.get('devices', []):
             if device.get('id') == device_id:
                 return device
         return None
 
-    async def discover_and_update_devices(self):
-        """Discover and update device configurations"""
+    async def monitor_events(self):
+        """Monitor doorbell events"""
         try:
-            discovered_devices = await self.discovery.discover_devices()
-            config_changed = False
+            for device in self.config.get('devices', []):
+                url = f"http://{device['ip']}/cgi-bin/eventManager.cgi?action=attach"
+                auth = base64.b64encode(
+                    f"{device['username']}:{device['password']}".encode()
+                ).decode()
 
-            # Update existing devices and add new ones
-            current_devices = self.config.get('devices', [])
-            current_ips = {d['ip'] for d in current_devices}
-
-            for device in discovered_devices:
-                if device['ip'] not in current_ips:
-                    # New device found
-                    device_id = f"doorbell_{len(current_devices) + 1}"
-                    device.update({
-                        'id': device_id,
-                        'name': f"Doorbell {len(current_devices) + 1}"
-                    })
-                    current_devices.append(device)
-                    config_changed = True
-
-            # Update configuration if changed
-            if config_changed:
-                self.config['devices'] = current_devices
-                self._save_config()
-                self.logger.info("Device configuration updated")
-
-            # Check for devices needing password change
-            for device in current_devices:
-                if device.get('needs_password_change', False):
-                    await self._secure_device(device)
-
+                async with self.session.get(
+                    url,
+                    headers={"Authorization": f"Basic {auth}"},
+                    timeout=None
+                ) as response:
+                    async for line in response.content:
+                        if line:
+                            await self._handle_event(device['id'], line.decode())
         except Exception as e:
-            self.logger.error(f"Error in device discovery: {e}")
+            self.logger.error(f"Error monitoring events: {e}")
+            await asyncio.sleep(5)  # Retry delay
 
-    async def _secure_device(self, device: Dict):
-        """Change default password on device"""
+    async def _handle_event(self, device_id, event_data):
+        """Handle events from the device"""
         try:
-            # Generate secure password
-            new_password = self._generate_secure_password()
-            
-            # Change password via device API
-            async with aiohttp.ClientSession() as session:
-                url = f"http://{device['ip']}/cgi-bin/userManager"
-                auth = aiohttp.BasicAuth(device['username'], device['password'])
-                
-                params = {
-                    'action': 'modifyPassword',
-                    'userName': device['username'],
-                    'oldPassword': device['password'],
-                    'newPassword': new_password
-                }
-                
-                async with session.get(url, auth=auth, params=params) as response:
-                    if response.status == 200:
-                        # Update configuration with new password
-                        device['password'] = new_password
-                        device['needs_password_change'] = False
-                        self._save_config()
-                        self.logger.info(f"Password updated for device {device['ip']}")
+            # Parse event data
+            event = {}
+            for line in event_data.split('\r\n'):
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    event[key.strip()] = value.strip()
 
+            if 'Code' in event:
+                topic = f"dahua/{device_id}/event"
+                self.mqtt_client.publish(topic, json.dumps({
+                    'timestamp': datetime.now().isoformat(),
+                    'type': event.get('Code'),
+                    'data': event
+                }))
         except Exception as e:
-            self.logger.error(f"Failed to secure device {device['ip']}: {e}")
+            self.logger.error(f"Error handling event: {e}")
 
-    def _generate_secure_password(self) -> str:
-        """Generate a secure random password"""
-        return hashlib.sha256(os.urandom(32)).hexdigest()[:16]
+    async def run(self):
+        """Main service loop"""
+        self.logger.info("Starting Dahua service")
+        self._setup_mqtt()
+        self.mqtt_client.loop_start()
 
-    async def monitor_events(s
+        async with aiohttp.ClientSession() as session:
+            self.session = session
+            while True:
+                try:
+                    await self.monitor_events()
+                except Exception as e:
+                    self.logger.error(f"Error in main loop: {e}")
+                    await asyncio.sleep(5)
+
+if __name__ == "__main__":
+    service = DahuaService()
+    asyncio.run(service.run())
