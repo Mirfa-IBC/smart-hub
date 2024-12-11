@@ -132,6 +132,18 @@ install_services() {
     
     # Install systemd services
     log "Installing systemd services..."
+    
+    # Remove old service files if they exist
+    for service in ttlock dahua zigbee2mqtt; do
+        if [ -f "/etc/systemd/system/$service.service" ]; then
+            systemctl stop $service.service || true
+            systemctl disable $service.service || true
+            systemctl unmask $service.service || true
+            rm -f "/etc/systemd/system/$service.service"
+        fi
+    done
+
+    # Copy new service files
     cp "$SCRIPT_DIR/../systemd/"*.service /etc/systemd/system/
     
     # Reload systemd
@@ -139,6 +151,7 @@ install_services() {
     
     # Enable and start services
     for service in ttlock dahua zigbee2mqtt; do
+        log "Enabling and starting $service..."
         systemctl enable $service.service
         systemctl start $service.service
     done
