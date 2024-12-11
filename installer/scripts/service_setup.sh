@@ -109,7 +109,7 @@ install_services() {
     DEST_DIR="/opt/smart-hub/services"
 
     # Create destination directories if they don't exist
-    mkdir -p "$DEST_DIR"/{dahua,ttlock,zigbee2mqtt}
+    mkdir -p "$DEST_DIR"/{dahua,ttlock,zigbee2mqtt,update}
 
     # Copy service files
     log "Copying service files..."
@@ -125,6 +125,10 @@ install_services() {
     # Copy Zigbee2MQTT config
     cp "$SOURCE_DIR/zigbee2mqtt/config.yaml" "$DEST_DIR/zigbee2mqtt/"
     cp "$SOURCE_DIR/zigbee2mqtt/discover_slzb06.py" "$DEST_DIR/zigbee2mqtt/"
+    
+    # Copy update config
+    cp "$SOURCE_DIR/update/config.yaml" "$DEST_DIR/update/"
+    cp "$SOURCE_DIR/update/*.py" "$DEST_DIR/update/"
 
     # Set correct permissions
     chown -R $SERVICE_USER:$SERVICE_USER "$DEST_DIR"
@@ -134,7 +138,7 @@ install_services() {
     log "Installing systemd services..."
     
     # Remove old service files if they exist
-    for service in ttlock dahua zigbee2mqtt; do
+    for service in ttlock dahua zigbee2mqtt update; do
         if [ -f "/etc/systemd/system/$service.service" ]; then
             systemctl stop $service.service || true
             systemctl disable $service.service || true
@@ -150,7 +154,7 @@ install_services() {
     systemctl daemon-reload
     
     # Enable and start services
-    for service in ttlock dahua zigbee2mqtt; do
+    for service in ttlock dahua zigbee2mqtt update; do
         log "Enabling and starting $service..."
         systemctl enable $service.service
         systemctl start $service.service
