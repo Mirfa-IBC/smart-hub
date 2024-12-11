@@ -25,10 +25,10 @@ class SLZB06Listener:
 def discover_slzb06():
     zeroconf = Zeroconf()
     listener = SLZB06Listener()
-    browser = ServiceBrowser(zeroconf, "_ezsp._tcp.local.", listener)
+    browser = ServiceBrowser(zeroconf, "_services._dns-sd._udp.local.", listener)
     
     # Wait for discovery
-    time.sleep(5)
+    time.sleep(60)
     
     zeroconf.close()
     return listener.devices
