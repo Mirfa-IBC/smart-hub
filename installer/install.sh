@@ -6,7 +6,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # Source other scripts with correct paths
 source "$SCRIPT_DIR/scripts/install.sh"
-source "$SCRIPT_DIR/scripts/zigbee_setup.sh"
+source "$SCRIPT_DIR/scripts/install_zigbee.sh"
 
 # Main installation steps
 check_prerequisites
