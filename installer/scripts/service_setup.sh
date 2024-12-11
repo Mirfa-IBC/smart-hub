@@ -114,7 +114,7 @@ install_services() {
     # Copy service files
     log "Copying service files..."
     
-    log "Copying service files... $SOURCE_DIR/dahua/"*.py $DEST_DIR/dahua/"
+    log "Copying service files... $SOURCE_DIR/dahua/*.py $DEST_DIR/dahua/"
     # Copy Dahua service
     cp "$SOURCE_DIR/dahua/"*.py "$DEST_DIR/dahua/"
     cp "$SOURCE_DIR/dahua/config.json" "$DEST_DIR/dahua/"
