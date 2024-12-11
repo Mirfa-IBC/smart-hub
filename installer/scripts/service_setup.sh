@@ -20,10 +20,24 @@ error() {
 }
 
 setup_service_user() {
-    log "Creating service user..."
+    log "Creating service user and groups..."
+    
+    # Create bluetooth group if it doesn't exist
+    getent group bluetooth || groupadd bluetooth
+
+    # Create dialout group if it doesn't exist
+    getent group dialout || groupadd dialout
+
+    # Create service user if it doesn't exist
     id -u $SERVICE_USER &>/dev/null || useradd -r -s /bin/false $SERVICE_USER
 
-    # Add to required groups
+    # Install bluetooth if not present
+    if ! dpkg -l | grep -q bluez; then
+        apt-get update
+        apt-get install -y bluetooth bluez
+    fi
+
+    # Add user to groups
     usermod -a -G bluetooth,dialout $SERVICE_USER
 }
 
