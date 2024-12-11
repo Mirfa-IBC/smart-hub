@@ -1,0 +1,17 @@
+[Unit]
+Description=Dahua Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=smarthub
+ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/dahua/service.py
+WorkingDirectory=/opt/smart-hub/services/dahua
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/smart-hub/dahua.log
+StandardError=append:/var/log/smart-hub/dahua.error.log
+
+[Install]
+WantedBy=multi-user.target

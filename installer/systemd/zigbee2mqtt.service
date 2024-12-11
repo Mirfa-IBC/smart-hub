@@ -1,0 +1,17 @@
+[Unit]
+Description=Zigbee2MQTT Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=smarthub
+ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/zigbee2mqtt/service.py
+WorkingDirectory=/opt/smart-hub/services/zigbee2mqtt
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/smart-hub/zigbee2mqtt.log
+StandardError=append:/var/log/smart-hub/zigbee2mqtt.error.log
+
+[Install]
+WantedBy=multi-user.target

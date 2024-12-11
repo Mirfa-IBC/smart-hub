@@ -1,0 +1,17 @@
+[Unit]
+Description=TTLock Service
+After=bluetooth.target network.target
+Wants=bluetooth.target
+
+[Service]
+Type=simple
+User=smarthub
+ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/ttlock/service.py
+WorkingDirectory=/opt/smart-hub/services/ttlock
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/smart-hub/ttlock.log
+StandardError=append:/var/log/smart-hub/ttlock.error.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+[Unit]
+Description=Smart Hub Update Service
+After=network.target mosquitto.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=smarthub
+ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/update/service.py
+WorkingDirectory=/opt/smart-hub/services/update
+Restart=always
+RestartSec=3600  # Restart every hour if failed
+StandardOutput=append:/var/log/smart-hub/update.log
+StandardError=append:/var/log/smart-hub/update.error.log
+Environment=PYTHONUNBUFFERED=1
+
+# Security options
+ProtectSystem=strict
+ReadWritePaths=/opt/smart-hub
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
