@@ -9,7 +9,7 @@ User=smarthub
 ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/update/service.py
 WorkingDirectory=/opt/smart-hub/services/update
 Restart=always
-RestartSec=3600  # Restart every hour if failed
+RestartSec=3600
 StandardOutput=append:/var/log/smart-hub/update.log
 StandardError=append:/var/log/smart-hub/update.error.log
 Environment=PYTHONUNBUFFERED=1
