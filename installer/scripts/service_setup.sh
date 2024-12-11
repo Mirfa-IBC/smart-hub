@@ -68,21 +68,37 @@ install_dependencies() {
     # Install system packages
     apt-get install -y \
         python3 \
-        python3-pip \
+        python3-full \
+        python3-venv \
         bluetooth \
         bluez \
         mosquitto \
-        git
+        git \
+        python3-bleak \
+        python3-paho-mqtt \
+        python3-aiohttp \
+        python3-cryptography \
+        python3-yaml
 
-    # Install Python packages
-    pip3 install \
-        bleak \
-        paho-mqtt \
-        aiohttp \
-        pycryptodome \
-        asyncio \
-        pyyaml
+    # Create virtual environment
+    if [ ! -d "/opt/smart-hub/venv" ]; then
+        log "Creating virtual environment..."
+        python3 -m venv /opt/smart-hub/venv
+        
+        # Activate virtual environment and install packages
+        source /opt/smart-hub/venv/bin/activate
+        /opt/smart-hub/venv/bin/pip install \
+            bleak \
+            paho-mqtt \
+            aiohttp \
+            pycryptodome \
+            pyyaml
+
+        # Set ownership
+        chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
+    fi
 }
+
 
 install_services() {
     log "Installing services..."

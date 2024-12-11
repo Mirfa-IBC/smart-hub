@@ -60,21 +60,3 @@ setup_system() {
     chown -R $SERVICE_USER:$SERVICE_USER $INSTALL_DIR
     chown -R $SERVICE_USER:$SERVICE_USER $LOG_DIR
 }
-
-install_dependencies() {
-    log "Installing dependencies..."
-    
-    # Update system
-    apt-get update
-    apt-get upgrade -y
-    
-    # Install required packages
-    apt-get install -y \
-        python3 python3-pip \
-        nodejs npm \
-        bluetooth bluez \
-        mosquitto \
-        nginx \
-        git \
-        sqlite3
-}
