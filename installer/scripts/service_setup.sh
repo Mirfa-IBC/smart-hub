@@ -103,11 +103,27 @@ install_dependencies() {
 install_services() {
     log "Installing services..."
     
-    # Copy service files
-    cp -r $INSTALL_DIR/services/* /opt/smart-hub/services/
+    # Define source and destination directories
+    SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+    SOURCE_DIR="$SCRIPT_DIR/../../services"
+    DEST_DIR="/opt/smart-hub/services"
+
+    # Create destination directories if they don't exist
+    mkdir -p "$DEST_DIR"
+
+    # Copy service files from source to destination
+    log "Copying service files..."
+    cp -r "$SOURCE_DIR/ttlock" "$DEST_DIR/"
+    cp -r "$SOURCE_DIR/dahua" "$DEST_DIR/"
+    cp -r "$SOURCE_DIR/update" "$DEST_DIR/"
+
+    # Set correct permissions
+    chown -R $SERVICE_USER:$SERVICE_USER "$DEST_DIR"
+    chmod -R 755 "$DEST_DIR"
     
     # Install systemd services
-    cp systemd/* /etc/systemd/system/
+    log "Installing systemd services..."
+    cp "$SCRIPT_DIR/../systemd/"*.service /etc/systemd/system/
     
     # Reload systemd
     systemctl daemon-reload
