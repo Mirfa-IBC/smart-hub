@@ -30,9 +30,9 @@ check_prerequisites() {
         error "Please run as root"
     fi
 
-    # Check system architecture
+    # Check architecture - allow both x86_64 and ARM
     ARCH=$(uname -m)
-    if [[ "$ARCH" != "aarch64" && "$ARCH" != "armv7l" ]]; then
+    if [[ "$ARCH" != "aarch64" && "$ARCH" != "armv7l" && "$ARCH" != "x86_64" ]]; then
         error "Unsupported architecture: $ARCH"
     fi
 
