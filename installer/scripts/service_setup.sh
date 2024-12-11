@@ -92,7 +92,8 @@ install_dependencies() {
             paho-mqtt \
             aiohttp \
             pycryptodome \
-            pyyaml
+            pyyaml \
+            zeroconf
 
         # Set ownership
         chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
