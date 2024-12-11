@@ -6,7 +6,7 @@ from datetime import datetime
 import paho.mqtt.client as mqtt
 from typing import Dict, List
 from bleak import BleakScanner
-from .ttlock_client import TTLockClient
+from ttlock_client import TTLockClient
 
 class TTLockService:
     def __init__(self):
