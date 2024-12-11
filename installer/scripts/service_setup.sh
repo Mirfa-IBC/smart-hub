@@ -109,13 +109,22 @@ install_services() {
     DEST_DIR="/opt/smart-hub/services"
 
     # Create destination directories if they don't exist
-    mkdir -p "$DEST_DIR"
+    mkdir -p "$DEST_DIR"/{dahua,ttlock,zigbee2mqtt}
 
-    # Copy service files from source to destination
+    # Copy service files
     log "Copying service files..."
-    cp -r "$SOURCE_DIR/ttlock" "$DEST_DIR/"
-    cp -r "$SOURCE_DIR/dahua" "$DEST_DIR/"
-    cp -r "$SOURCE_DIR/update" "$DEST_DIR/"
+    
+    # Copy Dahua service
+    cp "$SOURCE_DIR/dahua/"*.py "$DEST_DIR/dahua/"
+    cp "$SOURCE_DIR/dahua/config.json" "$DEST_DIR/dahua/"
+
+    # Copy TTLock service
+    cp "$SOURCE_DIR/ttlock/"*.py "$DEST_DIR/ttlock/"
+    cp "$SOURCE_DIR/ttlock/config.json" "$DEST_DIR/ttlock/"
+
+    # Copy Zigbee2MQTT config
+    cp "$SOURCE_DIR/zigbee2mqtt/config.yaml" "$DEST_DIR/zigbee2mqtt/"
+    cp "$SOURCE_DIR/zigbee2mqtt/discover_slzb06.py" "$DEST_DIR/zigbee2mqtt/"
 
     # Set correct permissions
     chown -R $SERVICE_USER:$SERVICE_USER "$DEST_DIR"
@@ -128,15 +137,11 @@ install_services() {
     # Reload systemd
     systemctl daemon-reload
     
-    # Enable services
-    systemctl enable ttlock.service
-    systemctl enable dahua.service
-    systemctl enable update.service
-    
-    # Start services
-    systemctl start ttlock.service
-    systemctl start dahua.service
-    systemctl start update.service
+    # Enable and start services
+    for service in ttlock dahua zigbee2mqtt; do
+        systemctl enable $service.service
+        systemctl start $service.service
+    done
 }
 
 verify_installation() {
