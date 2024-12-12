@@ -11,7 +11,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 log "importing $SCRIPT_DIR/scripts/install.sh"
 source "$SCRIPT_DIR/scripts/install.sh"
 source "$SCRIPT_DIR/scripts/service_setup.sh"
-source "$SCRIPT_DIR/install_zigbee.sh"
+source "$SCRIPT_DIR/scripts/install_zigbee.sh"
 log "importing $SCRIPT_DIR/update_setup.sh"
 source "$SCRIPT_DIR/update_setup.sh"
 
