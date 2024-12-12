@@ -142,7 +142,7 @@ install_services() {
     log "Installing systemd services..."
     
     # Remove old service files if they exist
-    for service in ttlock dahua update; do
+    for service in ttlock dahua zigbee update; do
         if [ -f "/etc/systemd/system/$service.service" ]; then
             systemctl stop $service.service || true
             systemctl disable $service.service || true

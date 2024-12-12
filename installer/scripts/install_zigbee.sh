@@ -182,29 +182,9 @@ EOF
 }
 
 setup_systemd_service() {
-    log "Setting up systemd service..."
-    cat > /etc/systemd/system/zigbee2mqtt.service << EOF
-[Unit]
-Description=Zigbee2MQTT
-After=network.target
-
-[Service]
-Environment=NODE_ENV=production
-ExecStart=/usr/bin/npm start --prefix $ZIGBEE_DIR
-WorkingDirectory=$ZIGBEE_DIR
-StandardOutput=inherit
-StandardError=inherit
-Restart=always
-RestartSec=10s
-User=root
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
     systemctl daemon-reload
-    systemctl enable zigbee2mqtt
-    systemctl restart zigbee2mqtt
+    systemctl enable zigbee2mqtt.service
+    systemctl restart zigbee2mqtt.service
 }
 
 install_zigbee() {
