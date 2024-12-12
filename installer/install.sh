@@ -18,6 +18,8 @@ check_prerequisites
 setup_system
 install_zigbee
 install_services
+configure_zigbee_network
+setup_systemd_service
 # configure_services
 # generate_admin_credentials
 

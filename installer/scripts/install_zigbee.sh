@@ -212,8 +212,7 @@ install_zigbee() {
     
     install_dependencies
     install_zigbee2mqtt
-    configure_zigbee_network
-    setup_systemd_service
+    
     
     log "Zigbee coordinator installation completed"
 }
