@@ -1,0 +1,16 @@
+[Unit]
+Description=Zigbee2MQTT
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/npm start --prefix /opt/zigbee
+WorkingDirectory=/opt/zigbee
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=10s
+User=root
+
+[Install]
+WantedBy=multi-user.target
