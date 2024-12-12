@@ -21,6 +21,6 @@ setup_system
 install_services
 # configure_services
 # generate_admin_credentials
-configure_zigbee_network
+install_zigbee
 
 echo "Installation completed successfully!"
