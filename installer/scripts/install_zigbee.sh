@@ -113,6 +113,8 @@ install_zigbee() {
     npm ci --prefix $ZIGBEE_DIR
 
     # Run discovery (assuming we keep the Python script for now)
+    log "$INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py"
+    log "/tmp/zigbee_devices.json"
     python3 "$INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py" > /tmp/zigbee_devices.json
 
     if [ ! -s /tmp/zigbee_devices.json ]; then
