@@ -86,7 +86,7 @@ configure_zigbee_network() {
     
     # Run discovery
     log "Running SLZB-06 discovery..."
-    python3 "$INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py" > /tmp/zigbee_devices.json
+    /opt/smart-hub/venv/bin/python "$INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py" > /tmp/zigbee_devices.json
 
     if [ ! -s /tmp/zigbee_devices.json ]; then
         error "No Zigbee coordinators found"
