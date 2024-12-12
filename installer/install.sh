@@ -8,12 +8,10 @@ log() {
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # Source other scripts with correct paths
-log "importing $SCRIPT_DIR/scripts/install.sh"
 source "$SCRIPT_DIR/scripts/install.sh"
 source "$SCRIPT_DIR/scripts/service_setup.sh"
 source "$SCRIPT_DIR/scripts/install_zigbee.sh"
-log "importing $SCRIPT_DIR/update_setup.sh"
-source "$SCRIPT_DIR/update_setup.sh"
+source "$SCRIPT_DIR/scripts/update_setup.sh"
 
 # Main installation steps
 check_prerequisites
