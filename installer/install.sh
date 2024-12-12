@@ -17,7 +17,7 @@ source "$SCRIPT_DIR/scripts/update_setup.sh"
 check_prerequisites
 setup_system
 install_zigbee
-install_services
+set_up_system
 configure_zigbee_network
 setup_systemd_service
 # configure_services
