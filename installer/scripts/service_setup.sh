@@ -189,4 +189,10 @@ main() {
     log "Services installed successfully!"
 }
 
-main "$@"
+
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Component-specific direct execution logic here
+    main
+    
+fi

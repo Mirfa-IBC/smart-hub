@@ -36,4 +36,7 @@ main() {
     log "Update service setup completed!"
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Component-specific direct execution logic here
+    main  
+fi
