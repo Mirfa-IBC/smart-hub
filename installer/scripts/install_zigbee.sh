@@ -114,7 +114,7 @@ configure_zigbee_network() {
     primary_port=$(echo $devices | jq -r '.[0].port')
     
     # Check if we should create new configuration
-    if [ ! -f "$ZIGBEE_CONFIG" ] || [ ! -s "$ZIGBEE_CONFIG" ]; then
+    if [ -f "$ZIGBEE_CONFIG" ] || [  -s "$ZIGBEE_CONFIG" ]; then
         log "Creating new configuration..."
         # Create base config
         cat > $ZIGBEE_CONFIG << EOF
