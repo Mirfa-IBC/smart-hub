@@ -98,6 +98,7 @@ install_dependencies() {
         # Set ownership
         chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
     fi
+    log "Finshed Installing dependencies..."
 }
 
 
