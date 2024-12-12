@@ -59,8 +59,8 @@ setup_directories() {
     chmod 755 $LOG_DIR
 }
 
-install_dependencies() {
-    log "Installing dependencies..."
+install_system_dependencies() {
+    log "Installing system dependencies..."
     
     # Update package list
     apt-get update
@@ -183,7 +183,7 @@ set_up_system() {
     
     setup_service_user
     setup_directories
-    install_dependencies
+    install_system_dependencies
     install_services
     verify_installation
     
