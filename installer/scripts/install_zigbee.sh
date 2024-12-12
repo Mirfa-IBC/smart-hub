@@ -102,7 +102,18 @@ install_zigbee() {
 
     # Install dependencies
     apt-get update
-    apt-get install -y nodejs npm git make g++ gcc jq
+    apt-get install -y curl make g++ gcc jq
+
+    # Install Node.js using nodesource
+    log "Installing Node.js..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    apt-get install -y nodejs
+
+    # Verify installations
+    node_version=$(node --version)
+    npm_version=$(npm --version)
+    log "Node.js version: $node_version"
+    log "NPM version: $npm_version"
 
     # Setup Zigbee2MQTT
     log "Setting up Zigbee2MQTT..."
@@ -112,9 +123,8 @@ install_zigbee() {
     # Run npm install in the correct directory without cd
     npm ci --prefix $ZIGBEE_DIR
 
-    # Run discovery (assuming we keep the Python script for now)
-    log "$INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py"
-    log "/tmp/zigbee_devices.json"
+    # Run discovery
+    log "Running SLZB-06 discovery..."
     python3 "$INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py" > /tmp/zigbee_devices.json
 
     if [ ! -s /tmp/zigbee_devices.json ]; then
@@ -124,7 +134,29 @@ install_zigbee() {
     # Configure discovered devices
     configure_zigbee_network
 
-    # Start service
+    # Create systemd service
+    log "Creating systemd service..."
+    cat > /etc/systemd/system/zigbee2mqtt.service << EOF
+[Unit]
+Description=Zigbee2MQTT
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/npm start --prefix $ZIGBEE_DIR
+WorkingDirectory=$ZIGBEE_DIR
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=10s
+User=root
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    # Reload systemd and start service
+    systemctl daemon-reload
     systemctl enable zigbee2mqtt
     systemctl start zigbee2mqtt
 
