@@ -3,6 +3,8 @@ set -e
 
 INSTALL_DIR="/opt/smart-hub"
 CONFIG_DIR="$INSTALL_DIR/config"
+ZIGBEE_DIR="/opt/zigbee2mqtt"
+ZIGBEE_CONFIG="$ZIGBEE_DIR/data/configuration.yaml"
 
 # Colors for output
 RED='\033[0;31m'
@@ -18,14 +20,13 @@ error() {
     exit 1
 }
 
-
 configure_zigbee_network() {
     log "Configuring Zigbee network..."
     
-    # Run discovery script
-    devices=$(python3 $INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py)
+    # Read discovery results
+    devices=$(cat /tmp/zigbee_devices.json)
     if [ $? -ne 0 ]; then
-        error "Failed to discover SLZB-06 devices"
+        error "Failed to read SLZB-06 devices configuration"
     fi
 
     # Get number of devices
@@ -34,6 +35,9 @@ configure_zigbee_network() {
     if [ $device_count -eq 0 ]; then
         error "No SLZB-06 devices found"
     fi
+
+    # Create config directory if it doesn't exist
+    mkdir -p $(dirname $ZIGBEE_CONFIG)
 
     # Configure primary coordinator
     primary_address=$(echo $devices | jq -r '.[0].address')
@@ -92,14 +96,23 @@ EOF
 
     log "Zigbee network configuration completed"
 }
+
 install_zigbee() {
     log "Starting Zigbee coordinator installation..."
 
-    # Install dependencies if not present
+    # Install dependencies
     apt-get update
-    apt-get install -y python3-pip python3-zeroconf jq
+    apt-get install -y nodejs npm git make g++ gcc jq
 
-    # Run discovery
+    # Setup Zigbee2MQTT
+    log "Setting up Zigbee2MQTT..."
+    mkdir -p $ZIGBEE_DIR
+    git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR
+
+    # Run npm install in the correct directory without cd
+    npm ci --prefix $ZIGBEE_DIR
+
+    # Run discovery (assuming we keep the Python script for now)
     python3 "$INSTALL_DIR/services/zigbee2mqtt/discover_slzb06.py" > /tmp/zigbee_devices.json
 
     if [ ! -s /tmp/zigbee_devices.json ]; then
