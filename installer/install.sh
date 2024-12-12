@@ -18,9 +18,10 @@ source "$SCRIPT_DIR/update_setup.sh"
 # Main installation steps
 check_prerequisites
 setup_system
+install_zigbee
 install_services
 # configure_services
 # generate_admin_credentials
-install_zigbee
+
 
 echo "Installation completed successfully!"
