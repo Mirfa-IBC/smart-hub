@@ -177,7 +177,7 @@ verify_installation() {
     done
 }
 
-main() {
+set_up_system() {
     log "Starting service installation..."
     
     setup_service_user
