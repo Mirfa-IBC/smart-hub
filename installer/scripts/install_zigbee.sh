@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-
+SERVICE_USER="smarthub"
 INSTALL_DIR="/opt/smart-hub"
 CONFIG_DIR="$INSTALL_DIR/config"
 ZIGBEE_DIR="/opt/smart-hub/zigbee"
@@ -69,15 +69,14 @@ install_dependencies() {
 install_zigbee2mqtt() {
     if check_zigbee_installation; then
         log "Zigbee2MQTT already installed. Checking for updates..."
-        cd $ZIGBEE_DIR
-        git pull
-        npm ci --prefix $ZIGBEE_DIR
+        su - $SERVICE_USER -c "git -C $ZIGBEE_DIR pull"
+        su - $SERVICE_USER npm ci --prefix $ZIGBEE_DIR
         return 0
     fi
 
     log "Installing Zigbee2MQTT..."
     mkdir -p $ZIGBEE_DIR
-    git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR
+    su - $SERVICE_USER -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
     npm ci --prefix $ZIGBEE_DIR
 }
 
