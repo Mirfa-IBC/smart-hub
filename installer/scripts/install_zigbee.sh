@@ -3,7 +3,7 @@ set -e
 
 INSTALL_DIR="/opt/smart-hub"
 CONFIG_DIR="$INSTALL_DIR/config"
-ZIGBEE_DIR="/opt/zigbee"
+ZIGBEE_DIR="/opt/smart-hub/zigbee"
 ZIGBEE_CONFIG="$ZIGBEE_DIR/data/configuration.yaml"
 ZIGBEE_CONFIG_BACKUP="$ZIGBEE_DIR/data/configuration.yaml.backup"
 
@@ -123,8 +123,7 @@ mqtt:
   server: mqtt://localhost:1883
 
 serial:
-  adapter: ezsp
-  port: tcp://${primary_address}:${primary_port}
+  port: mdns://slzb-06
 
 advanced:
   network_key: GENERATE
