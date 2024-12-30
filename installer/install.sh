@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-log() {
-    echo -e "${GREEN}[$(date '+%Y-%m-%d %H:%M:%S')] $1${NC}"
-}
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-# Source other scripts with correct paths
+# Source common definitions first
+source "$SCRIPT_DIR/scripts/common.sh"
+
+# Source other scripts
 source "$SCRIPT_DIR/scripts/install.sh"
 source "$SCRIPT_DIR/scripts/service_setup.sh"
 source "$SCRIPT_DIR/scripts/install_zigbee.sh"
@@ -16,12 +16,11 @@ source "$SCRIPT_DIR/scripts/update_setup.sh"
 # Main installation steps
 check_prerequisites
 setup_system
-set_up_system
+setup_service_user
+setup_directories
+install_system_dependencies
 install_zigbee
 configure_zigbee_network
 setup_systemd_service
-# configure_services
-# generate_admin_credentials
 
-
-echo "Installation completed successfully!"
+log "Installation completed successfully!"

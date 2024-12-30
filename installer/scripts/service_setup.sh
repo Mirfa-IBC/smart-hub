@@ -28,37 +28,43 @@ setup_service_user() {
     # Create dialout group if it doesn't exist
     getent group dialout || groupadd dialout
 
-    # Create service user if it doesn't exist
-    id -u $SERVICE_USER &>/dev/null || useradd -r -s /bin/false $SERVICE_USER
-
-    # Install bluetooth if not present
-    if ! dpkg -l | grep -q bluez; then
-        apt-get update
-        apt-get install -y bluetooth bluez
+    # Create service user if it doesn't exist with home directory in /opt/smarthub
+    if ! id -u $SERVICE_USER &>/dev/null; then
+        useradd -r -m -d "$INSTALL_DIR" -s /bin/bash $SERVICE_USER
+        # Set up git config for the user
+        runuser -l $SERVICE_USER -c 'git config --global user.email "smarthub@localhost"'
+        runuser -l $SERVICE_USER -c 'git config --global user.name "Smart Hub System"'
     fi
 
+    # Ensure proper home directory and shell even if user exists
+    usermod -d "$INSTALL_DIR" -s /bin/bash $SERVICE_USER 2>/dev/null || true
+    
     # Add user to groups
     usermod -a -G bluetooth,dialout $SERVICE_USER
+
+    # Ensure home directory has correct permissions
+    mkdir -p "$INSTALL_DIR"
+    chown -R $SERVICE_USER:$SERVICE_USER "$INSTALL_DIR"
+    chmod 750 "$INSTALL_DIR"
 }
 
 setup_directories() {
     log "Creating directories..."
     
     # Create main directories
-    mkdir -p $INSTALL_DIR/{services,config,data}
-    mkdir -p $LOG_DIR
+    mkdir -p "$INSTALL_DIR"/{services,config,data,zigbee}
+    mkdir -p "$LOG_DIR"
 
     # Create service-specific directories
-    mkdir -p $INSTALL_DIR/services/{ttlock,dahua,update}
-    mkdir -p $INSTALL_DIR/config/{ttlock,dahua,update}
+    mkdir -p "$INSTALL_DIR/services"/{ttlock,dahua,update,zigbee2mqtt}
+    mkdir -p "$INSTALL_DIR/config"/{ttlock,dahua,update}
     
     # Set permissions
-    chown -R $SERVICE_USER:$SERVICE_USER $INSTALL_DIR
-    chown -R $SERVICE_USER:$SERVICE_USER $LOG_DIR
-    chmod 755 $INSTALL_DIR
-    chmod 755 $LOG_DIR
+    chown -R $SERVICE_USER:$SERVICE_USER "$INSTALL_DIR"
+    chown -R $SERVICE_USER:$SERVICE_USER "$LOG_DIR"
+    chmod 755 "$INSTALL_DIR"
+    chmod 755 "$LOG_DIR"
 }
-
 install_system_dependencies() {
     log "Installing system dependencies..."
     
