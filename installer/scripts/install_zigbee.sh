@@ -67,18 +67,24 @@ install_dependencies() {
 }
 
 install_zigbee2mqtt() {
+    local npm_cache_dir="$INSTALL_DIR/.npm"
+    
+    # Ensure cache directory exists with proper permissions
+    mkdir -p "$npm_cache_dir"
+    chown -R $SERVICE_USER:$SERVICE_USER "$npm_cache_dir"
+
     if check_zigbee_installation; then
         log "Zigbee2MQTT already installed. Checking for updates..."
-        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && git pull"
-        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && npm ci"
+        runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm ci --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
         return 0
     fi
 
     log "Installing Zigbee2MQTT..."
     mkdir -p $ZIGBEE_DIR
     chown -R $SERVICE_USER:$SERVICE_USER $ZIGBEE_DIR
+    
     runuser -u $SERVICE_USER -- bash -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
-    runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && npm ci"
+    runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm ci --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
 }
 
 configure_zigbee_network() {
