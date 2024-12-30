@@ -65,7 +65,9 @@ setup_directories() {
         ensure_directory_permissions "$INSTALL_DIR/services/$service" "755"
         ensure_directory_permissions "$INSTALL_DIR/config/$service" "755"
     done
-    
+    touch "$LOG_DIR/update.log" "$LOG_DIR/update.error.log"
+    chown $SERVICE_USER:$SERVICE_USER "$LOG_DIR/update.log" "$LOG_DIR/update.error.log"
+    chmod 664 "$LOG_DIR/update.log" "$LOG_DIR/update.error.log"
     # Special cases for data directories that need write permissions
     ensure_directory_permissions "$INSTALL_DIR/zigbee" "755"
     ensure_directory_permissions "$INSTALL_DIR/zigbee/data" "775"
