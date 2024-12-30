@@ -203,8 +203,10 @@ EOF
         done
     fi
 
-    chown $SERVICE_USER:$SERVICE_USER "$ZIGBEE_CONFIG"
-    chmod 664 "$ZIGBEE_CONFIG"  
+    log "Setting correct permissions for configuration files..."
+    chown -R $SERVICE_USER:$SERVICE_USER "$ZIGBEE_DIR/data"
+    find "$ZIGBEE_DIR/data" -type f -exec chmod 664 {} \;
+    find "$ZIGBEE_DIR/data" -type d -exec chmod 775 {} \;
     log "Zigbee network configuration completed"
 }
 
