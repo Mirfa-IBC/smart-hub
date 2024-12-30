@@ -75,16 +75,31 @@ install_zigbee2mqtt() {
 
     if check_zigbee_installation; then
         log "Zigbee2MQTT already installed. Checking for updates..."
-        runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm ci --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
+        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && git pull && HOME=$INSTALL_DIR npm ci --cache $npm_cache_dir"
         return 0
     fi
 
     log "Installing Zigbee2MQTT..."
-    mkdir -p $ZIGBEE_DIR
-    chown -R $SERVICE_USER:$SERVICE_USER $ZIGBEE_DIR
+    
+    # If directory exists but not properly initialized, remove it
+    if [ -d "$ZIGBEE_DIR" ]; then
+        log "Removing existing incomplete installation..."
+        rm -rf "$ZIGBEE_DIR"
+    fi
+    
+    mkdir -p "$ZIGBEE_DIR"
+    chown -R $SERVICE_USER:$SERVICE_USER "$ZIGBEE_DIR"
     
     runuser -u $SERVICE_USER -- bash -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
     runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm ci --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
+}
+check_zigbee_installation() {
+    if [ -d "$ZIGBEE_DIR" ]; then
+        if [ -d "$ZIGBEE_DIR/.git" ] && [ -f "$ZIGBEE_DIR/package.json" ]; then
+            return 0  # Properly installed
+        fi
+    fi
+    return 1  # Not installed or incomplete
 }
 
 configure_zigbee_network() {
