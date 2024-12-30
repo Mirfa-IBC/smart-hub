@@ -69,15 +69,16 @@ install_dependencies() {
 install_zigbee2mqtt() {
     if check_zigbee_installation; then
         log "Zigbee2MQTT already installed. Checking for updates..."
-        su - $SERVICE_USER -c "git -C $ZIGBEE_DIR pull"
-        su - $SERVICE_USER npm ci --prefix $ZIGBEE_DIR
+        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && git pull"
+        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && npm ci"
         return 0
     fi
 
     log "Installing Zigbee2MQTT..."
     mkdir -p $ZIGBEE_DIR
-    su - $SERVICE_USER -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
-    npm ci --prefix $ZIGBEE_DIR
+    chown -R $SERVICE_USER:$SERVICE_USER $ZIGBEE_DIR
+    runuser -u $SERVICE_USER -- bash -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
+    runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && npm ci"
 }
 
 configure_zigbee_network() {
