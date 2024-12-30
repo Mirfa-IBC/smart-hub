@@ -29,3 +29,13 @@ error() {
     echo -e "${RED}[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: $1${NC}"
     exit 1
 }
+
+ensure_directory_permissions() {
+    local dir="$1"
+    local mode="${2:-755}"  # Default to 755 if not specified
+    
+    log "Setting up permissions for $dir"
+    mkdir -p "$dir"
+    chown -R $SERVICE_USER:$SERVICE_USER "$dir"
+    chmod -R "$mode" "$dir"
+}

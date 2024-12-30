@@ -51,20 +51,27 @@ setup_service_user() {
 setup_directories() {
     log "Creating directories..."
     
-    # Create main directories
-    mkdir -p "$INSTALL_DIR"/{services,config,data,zigbee}
-    mkdir -p "$LOG_DIR"
-
-    # Create service-specific directories
-    mkdir -p "$INSTALL_DIR/services"/{ttlock,dahua,update,zigbee2mqtt}
-    mkdir -p "$INSTALL_DIR/config"/{ttlock,dahua,update}
+    # Create main directories with proper permissions
+    ensure_directory_permissions "$INSTALL_DIR" "755"
+    ensure_directory_permissions "$LOG_DIR" "755"
     
-    # Set permissions
-    chown -R $SERVICE_USER:$SERVICE_USER "$INSTALL_DIR"
-    chown -R $SERVICE_USER:$SERVICE_USER "$LOG_DIR"
-    chmod 755 "$INSTALL_DIR"
-    chmod 755 "$LOG_DIR"
+    # Create and set permissions for service directories
+    for dir in "services" "config" "data"; do
+        ensure_directory_permissions "$INSTALL_DIR/$dir" "755"
+    done
+    
+    # Create and set permissions for service-specific directories
+    for service in "ttlock" "dahua" "update" "zigbee2mqtt"; do
+        ensure_directory_permissions "$INSTALL_DIR/services/$service" "755"
+        ensure_directory_permissions "$INSTALL_DIR/config/$service" "755"
+    done
+    
+    # Special cases for data directories that need write permissions
+    ensure_directory_permissions "$INSTALL_DIR/zigbee" "755"
+    ensure_directory_permissions "$INSTALL_DIR/zigbee/data" "775"
+    ensure_directory_permissions "$INSTALL_DIR/.npm" "775"  # For npm cache
 }
+
 install_system_dependencies() {
     log "Installing system dependencies..."
     

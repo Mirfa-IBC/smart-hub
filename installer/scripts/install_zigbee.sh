@@ -69,9 +69,10 @@ install_dependencies() {
 install_zigbee2mqtt() {
     local npm_cache_dir="$INSTALL_DIR/.npm"
     
-    # Ensure cache directory exists with proper permissions
-    mkdir -p "$npm_cache_dir"
-    chown -R $SERVICE_USER:$SERVICE_USER "$npm_cache_dir"
+    # Ensure proper directory structure and permissions
+    ensure_directory_permissions "$ZIGBEE_DIR" "755"
+    ensure_directory_permissions "$ZIGBEE_DIR/data" "775"
+    ensure_directory_permissions "$npm_cache_dir" "775"
 
     if check_zigbee_installation; then
         log "Zigbee2MQTT already installed. Checking for updates..."
@@ -85,13 +86,14 @@ install_zigbee2mqtt() {
     if [ -d "$ZIGBEE_DIR" ]; then
         log "Removing existing incomplete installation..."
         rm -rf "$ZIGBEE_DIR"
+        ensure_directory_permissions "$ZIGBEE_DIR" "755"
     fi
-    
-    mkdir -p "$ZIGBEE_DIR"
-    chown -R $SERVICE_USER:$SERVICE_USER "$ZIGBEE_DIR"
     
     runuser -u $SERVICE_USER -- bash -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
     runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm ci --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
+    
+    # Ensure permissions are correct after installation
+    ensure_directory_permissions "$ZIGBEE_DIR/data" "775"
 }
 check_zigbee_installation() {
     if [ -d "$ZIGBEE_DIR" ]; then
@@ -104,6 +106,9 @@ check_zigbee_installation() {
 
 configure_zigbee_network() {
     log "Configuring Zigbee network..."
+
+    ensure_directory_permissions "$(dirname $ZIGBEE_CONFIG)" "775"
+
     
     # Run discovery
     log "Running SLZB-06 discovery..."
@@ -198,6 +203,8 @@ EOF
         done
     fi
 
+    chown $SERVICE_USER:$SERVICE_USER "$ZIGBEE_CONFIG"
+    chmod 664 "$ZIGBEE_CONFIG"  
     log "Zigbee network configuration completed"
 }
 
