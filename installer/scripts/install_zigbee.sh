@@ -76,7 +76,7 @@ install_zigbee2mqtt() {
 
     if check_zigbee_installation; then
         log "Zigbee2MQTT already installed. Checking for updates..."
-        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && git pull && HOME=$INSTALL_DIR npm ci --cache $npm_cache_dir"
+        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && git reset --hard HEAD && git pull && HOME=$INSTALL_DIR npm ci --cache $npm_cache_dir"
         return 0
     fi
 
