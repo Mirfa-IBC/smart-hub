@@ -130,7 +130,7 @@ install_services() {
     
     # Define source and destination directories
     SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-    SOURCE_DIR="$SCRIPT_DIR/../../smart-hub"
+    SOURCE_DIR="$SCRIPT_DIR/../.."
     DEST_DIR="/opt/smart-hub"
     
     log "Source directory: $SOURCE_DIR"
