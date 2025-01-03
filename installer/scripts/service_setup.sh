@@ -132,14 +132,14 @@ install_services() {
     SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
     SOURCE_DIR="$SCRIPT_DIR/../../services"
     DEST_DIR="/opt/smart-hub/services"
-
+    log "source dir $SOURCE_DIR"
     # Create destination directories if they don't exist
     mkdir -p "$DEST_DIR"/{dahua,ttlock,zigbee2mqtt,update}
 
     # Copy service files
     log "Copying service files..."
     
-    cp "$SOURCE_DIR/requirements.txt" "$DEST_DIR/"
+    cp "$SOURCE_DIR/*.txt" "/opt/smart-hub"
 
     log "Copying service files... $SOURCE_DIR/dahua/*.py $DEST_DIR/dahua/"
     # Copy Dahua service
