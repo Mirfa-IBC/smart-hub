@@ -168,9 +168,7 @@ frontend:
   host: 0.0.0.0
   auth_token: GENERATE
 
-availability:
-  active: true
-  timeout: 10
+availability:true
 EOF
     else
         log "Updating existing configuration with new coordinator address..."
