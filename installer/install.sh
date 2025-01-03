@@ -18,9 +18,10 @@ check_prerequisites
 setup_system
 setup_service_user
 setup_directories
+install_services
 install_system_dependencies
 install_python_packages
-install_services
+install_custom_service
 install_zigbee
 configure_zigbee_network
 setup_systemd_service

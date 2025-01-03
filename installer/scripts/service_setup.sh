@@ -130,47 +130,34 @@ install_services() {
     
     # Define source and destination directories
     SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-    SOURCE_DIR="$SCRIPT_DIR/../../services"
-    DEST_DIR="/opt/smart-hub/services"
-    log "source dir $SOURCE_DIR"
-    # Create destination directories if they don't exist
-    mkdir -p "$DEST_DIR"/{dahua,ttlock,zigbee2mqtt,update}
-
-    # Copy service files
-    log "Copying service files..."
+    SOURCE_DIR="$SCRIPT_DIR/../../smart-hub"
+    DEST_DIR="/opt/smart-hub"
     
-    cp "$SOURCE_DIR/*.txt" "/opt/smart-hub"
+    log "Source directory: $SOURCE_DIR"
+    log "Destination directory: $DEST_DIR"
 
-    log "Copying service files... $SOURCE_DIR/dahua/*.py $DEST_DIR/dahua/"
-    # Copy Dahua service
-    cp "$SOURCE_DIR/dahua/"*.py "$DEST_DIR/dahua/"
-    cp "$SOURCE_DIR/dahua/config.json" "$DEST_DIR/dahua/"
+    # Create destination directory if it doesn't exist
+    mkdir -p "$DEST_DIR"
 
-    # Copy TTLock service
-    cp "$SOURCE_DIR/ttlock/"*.py "$DEST_DIR/ttlock/"
-    cp "$SOURCE_DIR/ttlock/config.json" "$DEST_DIR/ttlock/"
-
-    # Copy STT service
-    cp "$SOURCE_DIR/stt-server/"*.py "$DEST_DIR/stt-server/"
-    cp "$SOURCE_DIR/stt-server/config.json" "$DEST_DIR/stt-server/"
-
-    # Copy Zigbee2MQTT config
-    cp "$SOURCE_DIR/zigbee2mqtt/config.yaml" "$DEST_DIR/zigbee2mqtt/"
-    cp "$SOURCE_DIR/zigbee2mqtt/discover_slzb06.py" "$DEST_DIR/zigbee2mqtt/"
-    
-    log "Copying service files... $SOURCE_DIR/update/service.py $DEST_DIR/update/"
-    # Copy update config
-    cp "$SOURCE_DIR/update/config.yaml" "$DEST_DIR/update/"
-    cp "$SOURCE_DIR/update/service.py" "$DEST_DIR/update/"
-
+    # Copy all files and directories from source to destination
+    log "Copying all files from $SOURCE_DIR to $DEST_DIR..."
+    cp -r "$SOURCE_DIR/"* "$DEST_DIR/"
 
     # Set correct permissions
+    log "Setting permissions..."
     chown -R $SERVICE_USER:$SERVICE_USER "$DEST_DIR"
     chmod -R 755 "$DEST_DIR"
     
-    # Install systemd services
+    log "Service installation complete."
+}
+
+install_custom_service(){
+        # Install systemd services
     log "Installing systemd services..."
     
+    SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+    SOURCE_DIR="$SCRIPT_DIR/../../services"
+    DEST_DIR="/opt/smart-hub/services"
     # Remove old service files if they exist
     for service in ttlock dahua zigbee update "stt-server"; do
         if [ -f "/etc/systemd/system/$service.service" ]; then
