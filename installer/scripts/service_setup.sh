@@ -185,7 +185,7 @@ install_services() {
     systemctl daemon-reload
     
     # Enable and start services
-    for service in ttlock dahua zigbee2mqtt update; do
+    for service in ttlock dahua zigbee2mqtt update "stt-server" ; do
         log "Enabling and starting $service..."
         systemctl enable $service.service
         systemctl start $service.service
