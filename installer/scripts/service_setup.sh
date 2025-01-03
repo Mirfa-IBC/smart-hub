@@ -61,7 +61,7 @@ setup_directories() {
     done
     
     # Create and set permissions for service-specific directories
-    for service in "ttlock" "dahua" "update" "zigbee2mqtt"; do
+    for service in "ttlock" "dahua" "update" "zigbee2mqtt" "stt-server"; do
         ensure_directory_permissions "$INSTALL_DIR/services/$service" "755"
         ensure_directory_permissions "$INSTALL_DIR/config/$service" "755"
     done
@@ -115,6 +115,13 @@ install_system_dependencies() {
     fi
     log "Finshed Installing dependencies..."
 }
+install_python_packages(){
+    log "Finshed install_python_packages ..."
+    source /opt/smart-hub/venv/bin/activate
+    /opt/smart-hub/venv/bin/pip install -r /opt/smart-hub/requirements.txt
+    log "Finshed install_python_packages ..."
+    
+}
 
 
 install_services() {
@@ -140,6 +147,10 @@ install_services() {
     cp "$SOURCE_DIR/ttlock/"*.py "$DEST_DIR/ttlock/"
     cp "$SOURCE_DIR/ttlock/config.json" "$DEST_DIR/ttlock/"
 
+    # Copy STT service
+    cp "$SOURCE_DIR/stt-server/"*.py "$DEST_DIR/stt-server/"
+    cp "$SOURCE_DIR/stt-server/config.json" "$DEST_DIR/stt-server/"
+
     # Copy Zigbee2MQTT config
     cp "$SOURCE_DIR/zigbee2mqtt/config.yaml" "$DEST_DIR/zigbee2mqtt/"
     cp "$SOURCE_DIR/zigbee2mqtt/discover_slzb06.py" "$DEST_DIR/zigbee2mqtt/"
@@ -158,7 +169,7 @@ install_services() {
     log "Installing systemd services..."
     
     # Remove old service files if they exist
-    for service in ttlock dahua zigbee update; do
+    for service in ttlock dahua zigbee update "stt-service"; do
         if [ -f "/etc/systemd/system/$service.service" ]; then
             systemctl stop $service.service || true
             systemctl disable $service.service || true
@@ -199,6 +210,7 @@ set_up_system() {
     setup_service_user
     setup_directories
     install_system_dependencies
+    install_python_packages
     install_services
     verify_installation
     

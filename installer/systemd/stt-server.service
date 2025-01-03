@@ -1,0 +1,17 @@
+[Unit]
+Description=STT Service
+After=bluetooth.target network.target
+Wants=bluetooth.target
+
+[Service]
+Type=simple
+User=smarthub
+ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/stt-server/main.py
+WorkingDirectory=/opt/smart-hub/services/stt-server
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/smart-hub/stt-server.log
+StandardError=append:/var/log/smart-hub/stt-server.error.log
+
+[Install]
+WantedBy=multi-user.target
