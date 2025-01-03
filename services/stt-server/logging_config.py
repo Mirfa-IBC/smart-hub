@@ -1,16 +1,18 @@
 import logging
 
 def setup_logging():
-    """Set up logging configuration."""
+    """Set up logging configuration for console output."""
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    # Additional handlers can be added here (e.g., for file output)
-    file_handler = logging.FileHandler('app.log')
-    file_handler.setLevel(logging.INFO)
+    # The root logger automatically outputs to the console
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
 
-    # Adding the file handler to the root logger
-    logging.getLogger().addHandler(file_handler)
+    # Replace existing handlers with the console handler
+    root_logger = logging.getLogger()
+    root_logger.handlers = []  # Clear existing handlers
+    root_logger.addHandler(console_handler)
