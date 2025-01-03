@@ -19,6 +19,8 @@ setup_system
 setup_service_user
 setup_directories
 install_system_dependencies
+install_python_packages
+install_services
 install_zigbee
 configure_zigbee_network
 setup_systemd_service
