@@ -87,8 +87,7 @@ class VADProcessor:
             repo_or_dir='snakers4/silero-vad',
             model='silero_vad',
             force_reload=True,
-            trust_repo=True,
-            model_dir=cache_dir
+            trust_repo=True
         )
         self.sample_rate = 16000
         self.vad_threshold = 0.3
