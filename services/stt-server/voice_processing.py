@@ -30,7 +30,7 @@ import os
 import os
 logger = logging.getLogger(__name__)
 class WhisperProcessor:
-    def __init__(self, model_name: str = "large-v3"):
+    def __init__(self, model_name: str = "distil-large-v3"):
         """Initialize Whisper with specified model"""
         logger.info(f"Loading Whisper model: {model_name}")
         download_dir = os.path.join(os.path.dirname(__file__), "models")
