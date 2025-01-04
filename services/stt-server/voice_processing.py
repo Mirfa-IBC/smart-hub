@@ -54,17 +54,20 @@ class WhisperProcessor:
         try:
             logger.info(f"Processing audio file with Whisper: {audio_filename}")
             
-            # Use more aggressive settings for better transcription
-            result = self.model.transcribe(
+            # Transcribe with faster-whisper
+            segments, info = self.model.transcribe(
                 audio_filename,
                 language="en",
-                temperature=0.2,
-                initial_prompt="This is a smart home voice command for controlling lights and switches.",
-                condition_on_previous_text=True,
-                fp16=False
+                beam_size=5,
+                vad_filter=True,
+                vad_parameters=dict(
+                    min_silence_duration_ms=500
+                ),
+                initial_prompt="This is a smart home voice command."
             )
             
-            transcription = result["text"].strip()
+            # Get text from segments
+            transcription = " ".join([segment.text for segment in segments]).strip()
             
             # Remove wake words from transcription
             cleaned_text = self._remove_wake_words(transcription)
@@ -75,9 +78,20 @@ class WhisperProcessor:
             return cleaned_text
             
         except Exception as e:
-            logger.info(f"Error in Whisper transcription: {e}")
+            logger.error(f"Error in Whisper transcription: {e}")
             traceback.print_exc()
             return None
+            
+    def _remove_wake_words(self, text: str) -> str:
+        """Remove common wake words from transcription"""
+        text_lower = text.lower()
+        
+        # Remove common wake words
+        for wake_word in self.common_wake_words:
+            if text_lower.startswith(wake_word):
+                return text[len(wake_word):].strip()
+        
+        return text
         
 class VADProcessor:
     def __init__(self):
