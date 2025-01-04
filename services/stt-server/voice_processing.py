@@ -25,6 +25,7 @@ import aiohttp
 from wyoming.event import Event, async_write_event
 import websockets
 import logging
+import os
 logger = logging.getLogger(__name__)
 class WhisperProcessor:
     def __init__(self, model_name: str = "large-v2"):
@@ -78,11 +79,15 @@ class WhisperProcessor:
         
 class VADProcessor:
     def __init__(self):
+        cache_dir = os.path.join(os.path.dirname(__file__), "models", "torch_cache")
+        os.makedirs(cache_dir, exist_ok=True)
+        logger.info(f"Downloading models silero_vad in {cache_dir}")
         self.vad_model, _ = torch.hub.load(
             repo_or_dir='snakers4/silero-vad',
             model='silero_vad',
             force_reload=True,
-            trust_repo=True
+            trust_repo=True,
+            model_dir=cache_dir
         )
         self.sample_rate = 16000
         self.vad_threshold = 0.3
