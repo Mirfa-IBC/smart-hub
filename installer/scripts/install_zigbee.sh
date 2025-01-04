@@ -76,12 +76,7 @@ install_zigbee2mqtt() {
 
     if check_zigbee_installation; then
         log "Zigbee2MQTT already installed. Checking for updates..."
-        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && git reset --hard HEAD && git pull && HOME=$INSTALL_DIR npm install --cache $npm_cache_dir && HOME=$INSTALL_DIR npm ci --cache $npm_cache_dir"        # Check for package-lock.json and use appropriate npm command
-        # if [ -f "$ZIGBEE_DIR/package-lock.json" ]; then
-        #     runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && HOME=$INSTALL_DIR npm ci --cache $npm_cache_dir"
-        # else
-        #     runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && HOME=$INSTALL_DIR npm install --cache $npm_cache_dir"
-        # fi
+        runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && git reset --hard HEAD && git pull && HOME=$INSTALL_DIR npm install --cache $npm_cache_dir && HOME=$INSTALL_DIR npm ci --cache $npm_cache_dir && HOME=$INSTALL_DIR npm run build"
         return 0
     fi
 
@@ -96,6 +91,8 @@ install_zigbee2mqtt() {
     
     runuser -u $SERVICE_USER -- bash -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
     runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm ci --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
+    # Add build step
+    runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && HOME=$INSTALL_DIR npm run build"
     
     # Ensure permissions are correct after installation
     ensure_directory_permissions "$ZIGBEE_DIR/data" "775"
