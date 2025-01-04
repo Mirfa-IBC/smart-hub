@@ -67,6 +67,7 @@ setup_directories() {
     done
 
     ensure_directory_permissions "$INSTALL_DIR/services/stt-server/models" "755"
+    ensure_directory_permissions "$INSTALL_DIR/services/stt-server/models/torch_cache" "755"
     ensure_directory_permissions "$INSTALL_DIR/services/stt-server/audio_files" "755"
 
     touch "$LOG_DIR/update.log" "$LOG_DIR/update.error.log"
