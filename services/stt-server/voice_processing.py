@@ -80,7 +80,8 @@ class WhisperProcessor:
 class VADProcessor:
     def __init__(self):
         cache_dir = os.path.join(os.path.dirname(__file__), "models", "torch_cache")
-        os.makedirs(cache_dir, exist_ok=True)
+        # os.makedirs(cache_dir, exist_ok=True)
+        os.environ['TORCH_HOME'] = cache_dir
         logger.info(f"Downloading models silero_vad in {cache_dir}")
         self.vad_model, _ = torch.hub.load(
             repo_or_dir='snakers4/silero-vad',
