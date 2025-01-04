@@ -4,6 +4,7 @@ After=bluetooth.target network.target
 Wants=bluetooth.target
 
 [Service]
+EnvironmentFile=/etc/smarthub.env
 Type=simple
 User=smarthub
 ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/stt-server/main.py

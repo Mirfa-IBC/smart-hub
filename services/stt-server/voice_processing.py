@@ -30,7 +30,9 @@ class WhisperProcessor:
     def __init__(self, model_name: str = "large-v2"):
         """Initialize Whisper with specified model"""
         logger.info(f"Loading Whisper model: {model_name}")
-        self.model = whisper.load_model(model_name)
+        download_dir = os.path.join(os.path.dirname(__file__), "models")
+
+        self.model = whisper.load_model(model_name,download_root=download_dir)
         self.common_wake_words = ["alexa", "hey alexa", "ok google", "hey google", "siri", "hey siri"]
 
     def _remove_wake_words(self, text: str) -> str:
