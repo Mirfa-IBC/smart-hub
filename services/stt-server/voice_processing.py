@@ -110,7 +110,7 @@ class VADProcessor:
         self.silence_threshold = 15
         self.chunk_size = 512
         self.min_audio_length = 1.0  # Minimum audio length in seconds
-        self.max_audio_length = 30.0  # Maximum audio length in seconds
+        self.max_audio_length = 5.0  # Maximum audio length in seconds
 
     def process_chunk(self, audio_chunk: np.ndarray) -> float:
         try:
