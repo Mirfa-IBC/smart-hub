@@ -19,21 +19,23 @@ import time
 import wave
 import traceback
 from typing import Dict, List, Optional, Any
-import whisper
+# import whisper
 
 import aiohttp
 from wyoming.event import Event, async_write_event
 import websockets
 import logging
+from faster_whisper import WhisperModel  # Add this import
+import os
 import os
 logger = logging.getLogger(__name__)
 class WhisperProcessor:
-    def __init__(self, model_name: str = "large-v2"):
+    def __init__(self, model_name: str = "large-v3"):
         """Initialize Whisper with specified model"""
         logger.info(f"Loading Whisper model: {model_name}")
         download_dir = os.path.join(os.path.dirname(__file__), "models")
         logger.info(f" downloading models ${model_name} in ${download_dir}")
-        self.model = whisper.load_model(model_name,download_root=download_dir)
+        self.model = WhisperModel(model_name,device="cpu",compute_type="int8",download_root=download_dir,cpu_threads=os.cpu_count())
         self.common_wake_words = ["alexa", "hey alexa", "ok google", "hey google", "siri", "hey siri"]
 
     def _remove_wake_words(self, text: str) -> str:

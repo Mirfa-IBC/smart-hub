@@ -49,7 +49,7 @@ check_nodejs_installation() {
 install_dependencies() {
     log "Installing zigbee system dependencies..."
     apt-get update
-    apt-get install -y curl make g++ gcc jq || error "Failed to install system dependencies"
+    apt-get install -y curl make g++ gcc jq ffmeg || error "Failed to install system dependencies"
     
     if ! check_nodejs_installation; then
         log "Installing Node.js..."
