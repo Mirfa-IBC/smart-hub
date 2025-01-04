@@ -43,3 +43,5 @@ ENV/
 # Operating System
 .DS_Store
 Thumbs.db
+
+/services/stt-server/models
