@@ -35,7 +35,9 @@ class WhisperProcessor:
         logger.info(f"Loading Whisper model: {model_name}")
         download_dir = os.path.join(os.path.dirname(__file__), "models")
         logger.info(f" downloading models ${model_name} in ${download_dir}")
-        self.model = WhisperModel(model_name,device="cpu",compute_type="int8",download_root=download_dir,cpu_threads=os.cpu_count())
+        num_threads = min(os.cpu_count(), 4)
+
+        self.model = WhisperModel(model_name,device="cpu",compute_type="int8",download_root=download_dir,cpu_threads=num_threads)
         self.common_wake_words = ["alexa", "hey alexa", "ok google", "hey google", "siri", "hey siri"]
 
     def _remove_wake_words(self, text: str) -> str:
@@ -59,10 +61,8 @@ class WhisperProcessor:
                 audio_filename,
                 language="en",
                 beam_size=5,
-                vad_filter=True,
-                vad_parameters=dict(
-                    min_silence_duration_ms=500
-                ),
+                best_of=5,
+                vad_filter=False,
                 initial_prompt="This is a smart home voice command."
             )
             
