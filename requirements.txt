@@ -60,3 +60,4 @@ wcwidth==0.2.13
 websockets==14.1
 wyoming==1.6.0
 yarl==1.18.3
+faster-whisper==1.1.1
