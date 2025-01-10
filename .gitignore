@@ -45,3 +45,4 @@ ENV/
 Thumbs.db
 
 /services/stt-server/models
+client/recordings
