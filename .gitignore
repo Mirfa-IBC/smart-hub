@@ -46,3 +46,4 @@ Thumbs.db
 
 /services/stt-server/models
 client/recordings
+services/stt-server/audio_files

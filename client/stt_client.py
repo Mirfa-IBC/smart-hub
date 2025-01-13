@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class WakeWordClient:
     def __init__(
         self,
-        server_host: str = "192.168.11.99",
+        server_host: str = "localhost",
         server_port: int = 10200,
         device_name: Optional[str] = None,
         group: Optional[str] = None,
@@ -361,7 +361,7 @@ class WakeWordClient:
 
 def create_argparser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Wake Word Client")
-    parser.add_argument("--host", default="192.168.11.99", help="Server host address")
+    parser.add_argument("--host", default="localhost", help="Server host address")
     parser.add_argument("--port", type=int, default=10200, help="Server port number")
     parser.add_argument("--name", help="Device name")
     parser.add_argument("--group", help="Group name")

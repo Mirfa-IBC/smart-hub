@@ -7,7 +7,7 @@ import time
 import logging
 logger = logging.getLogger(__name__)
 class Zigbee2MQTTController:
-    def __init__(self, host: str = "192.168.11.99", port: int = 8080, token: str = "a"):
+    def __init__(self, host: str = "localhost:192.168.11.99", port: int = 8080, token: str = "a"):
         """Initialize the controller with optimized settings"""
         self.ws_url = f"ws://{host}:{port}/api?token={token}"
         self.device_states: Dict[str, dict] = {}

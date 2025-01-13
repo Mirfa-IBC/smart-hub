@@ -183,7 +183,7 @@ class ClientEventHandler(AsyncEventHandler):
 
 class STTServer:
     def __init__(self, host: str = "0.0.0.0", port: int = 10200,
-                 mqtt_api_host: str = "192.168.11.99"):
+                 mqtt_api_host: str = "localhost"):
         self.host = host
         self.port = port
         

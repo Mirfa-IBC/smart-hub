@@ -1,179 +1,226 @@
 import asyncio
 import logging
 from aioesphomeapi import APIClient
+import socket
+import time
+import numpy as np
+from wake_word.detector import WakeWordDetector
+import backoff  # Add this dependency
 from aioesphomeapi.model import (
     VoiceAssistantAudioData, 
     VoiceAssistantAudioSettings, 
     VoiceAssistantEventType
 )
-import wave
-from datetime import datetime
 import os
-import io
-import socket
 import uuid
-import time
-import numpy as np
-import struct
-
-# Set up logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
 class VoiceAssistantUDPServer:
-    """UDP server to handle voice assistant communication"""
-    def __init__(self, host: str = '0.0.0.0', port: int = 12345):
+    def __init__(self, host: str = '0.0.0.0', port: int = 12345, max_retries: int = 3):
         self.host = host
         self.port = port
+        self.base_port = port  # Store original port for retry attempts
         self.socket = None
         self._running = False
         self.last_packet_time = None
         self.packets_received = 0
         self.audio_callback = None
+        self.max_retries = max_retries
+        self.connection_attempts = 0
+        self.last_error_time = 0
+        self.error_threshold = 5  # Max errors per minute
+        self.error_count = 0
+        self.last_error_reset = time.time()
 
     def set_audio_callback(self, callback):
-        """Set callback for audio data processing"""
         self.audio_callback = callback
 
     async def start_server(self):
-        """Start UDP server and return the port"""
-        try:
-            logger.info(f"Creating UDP socket on {self.host}:{self.port}")
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            logger.info(f"Binding UDP socket to {self.host}:{self.port}")
-            self.socket.bind((self.host, self.port))
-            self.socket.setblocking(False)
-            self._running = True
-            logger.info(f"UDP Server started successfully on {self.host}:{self.port}")
-            
-            # Start the receive loop
-            asyncio.create_task(self.receive_loop())
-            return self.port
-        except Exception as e:
-            logger.error(f"Failed to start UDP server: {e}")
-            raise
+        while self.connection_attempts < self.max_retries:
+            try:
+                # Try with current port
+                current_port = self.base_port + self.connection_attempts
+                logger.info(f"Attempting to start UDP server on {self.host}:{current_port}")
+                
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                
+                # Add keep-alive for TCP connections
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+                
+                # Set larger buffer sizes
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 65536)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 65536)
+                
+                self.socket.bind((self.host, current_port))
+                self.socket.setblocking(False)
+                self._running = True
+                self.port = current_port  # Update with successful port
+                
+                logger.info(f"UDP Server started successfully on {self.host}:{self.port}")
+                asyncio.create_task(self.monitor_connection())
+                asyncio.create_task(self.receive_loop())
+                return self.port
 
+            except OSError as e:
+                logger.error(f"Failed to bind to port {current_port}: {e}")
+                self.connection_attempts += 1
+                if self.connection_attempts >= self.max_retries:
+                    raise RuntimeError(f"Failed to start UDP server after {self.max_retries} attempts")
+                await asyncio.sleep(1)  # Wait before retry
+
+    async def monitor_connection(self):
+        """Monitor connection health and attempt recovery if needed"""
+        while self._running:
+            current_time = time.time()
+            
+            # Reset error count every minute
+            if current_time - self.last_error_reset >= 60:
+                self.error_count = 0
+                self.last_error_reset = current_time
+
+            # Check for connection timeout
+            if self.last_packet_time and \
+               current_time - self.last_packet_time > 10:  # 10 second timeout
+                logger.warning("Connection timeout detected, attempting recovery")
+                await self.attempt_recovery()
+
+            await asyncio.sleep(1)
+
+    async def attempt_recovery(self):
+        """Attempt to recover from connection issues"""
+        if self.error_count < self.error_threshold:
+            self.error_count += 1
+            logger.info("Attempting connection recovery")
+            
+            # Close existing socket
+            if self.socket:
+                self.socket.close()
+                
+            # Attempt to recreate socket
+            try:
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                self.socket.bind((self.host, self.port))
+                self.socket.setblocking(False)
+                logger.info("Successfully recovered connection")
+            except Exception as e:
+                logger.error(f"Recovery attempt failed: {e}")
+
+    @backoff.on_exception(
+        backoff.expo,
+        (ConnectionError, socket.error),
+        max_tries=5,
+        max_time=30
+    )
     async def receive_loop(self):
-        """Continuously receive UDP packets"""
+        """Continuously receive UDP packets with exponential backoff retry"""
         logger.info("Starting UDP receive loop")
+        buffer_size = 4096  # Increased buffer size
+        
         while self._running and self.socket:
             try:
-                data, addr = await asyncio.get_event_loop().sock_recvfrom(self.socket, 2048)
+                loop = asyncio.get_event_loop()
+                data, addr = await loop.sock_recvfrom(self.socket, buffer_size)
                 
-                # Send data to callback if registered
-                if self.audio_callback and len(data) > 0:
-                    await self.audio_callback(data)
-                
-                # Stats logging
-                current_time = time.time()
-                if self.last_packet_time is None:
-                    self.last_packet_time = current_time
-                
+                # Update connection monitoring
+                self.last_packet_time = time.time()
                 self.packets_received += 1
-                if current_time - self.last_packet_time >= 1.0:
-                    logger.info(f"UDP Stats - Packets/sec: {self.packets_received}, Last packet size: {len(data)}")
-                    self.packets_received = 0
-                    self.last_packet_time = current_time
-                
-            except BlockingIOError:
+
+                # Process received data
+                if self.audio_callback and len(data) > 0:
+                    try:
+                        await self.audio_callback(data)
+                    except Exception as e:
+                        logger.error(f"Error in audio callback: {e}")
+
+            except (BlockingIOError, InterruptedError):
                 await asyncio.sleep(0.001)
+            except ConnectionError as e:
+                logger.error(f"Connection error in receive loop: {e}")
+                await self.attempt_recovery()
+                raise  # Allow backoff to handle retry
             except Exception as e:
-                logger.error(f"Error in UDP receive loop: {e}")
+                logger.error(f"Unexpected error in receive loop: {e}")
                 await asyncio.sleep(0.1)
 
     def stop(self):
-        """Stop the UDP server"""
+        """Stop the UDP server gracefully"""
         logger.info("Stopping UDP server")
         self._running = False
         if self.socket:
             try:
+                self.socket.shutdown(socket.SHUT_RDWR)
                 self.socket.close()
             except Exception as e:
                 logger.error(f"Error closing UDP socket: {e}")
             self.socket = None
         logger.info("UDP Server stopped")
 
-    def close(self):
-        """Close the UDP server"""
-        self.stop()
-
 class VoiceAssistantClient:
     def __init__(self, host: str, encryption_key: str = None, port: int = 6053):
         self.host = host
         self.port = port
         self.encryption_key = encryption_key
-        self.client = APIClient(host, port, encryption_key, noise_psk=encryption_key)
-        
-        # Pipeline management
-        self.conversation_id = None
+        self.client = APIClient(host, port, password="", noise_psk=encryption_key)
+        self.reconnect_attempts = 0
+        self.max_reconnect_attempts = 5
+        self.reconnect_delay = 1  # Start with 1 second delay
         self.voice_assistant_udp_server = None
+
+        self.buffer_position = 0
+        self.buffer_size = 8000  # 0.5 seconds at 16kHz
+        self.audio_buffer = np.zeros(self.buffer_size, dtype=np.int16)
+        self.buffer_filled = False
         
-        # Recording management
-        self.is_running = False
-        self.server_port = 12345
-        self.wav_file = None
-        self.recording_started = False
-        self.last_audio_time = None
-        self.audio_chunks = 0
-        
-        # Audio settings
-        self.sample_rate = 16000
-        self.sample_width = 2
-        self.channels = 1
+        # Add detection state management
+        self.last_detection_time = 0
+        self.detection_cooldown = 0.5  
+        self.detector = WakeWordDetector();
         
         # Ensure recordings directory exists
         os.makedirs('recordings', exist_ok=True)
-
+        
+        # Configure reconnection settings
+        self._request_timeout = 30  # Used in connect method
     async def handle_audio(self, data: bytes) -> None:
-        """Handle incoming audio data with direct processing for optimal quality"""
         try:
-            if not self.recording_started:
-                self.recording_started = True
-                logger.info("First audio chunk received, starting recording")
+            # Convert and downsample from 32kHz to 16kHz
+            audio_data = np.frombuffer(data, dtype=np.int16)[::2]
+            
+            # Process in fixed-size chunks
+            chunk_size = len(audio_data)
+            
+            # Update ring buffer
+            if self.buffer_position + chunk_size > self.buffer_size:
+                # Split the chunk
+                first_part = self.buffer_size - self.buffer_position
+                second_part = chunk_size - first_part
                 
-                if not self.wav_file:
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    filename = os.path.join('recordings', f"recording_{timestamp}.wav")
+                self.audio_buffer[self.buffer_position:] = audio_data[:first_part]
+                self.audio_buffer[:second_part] = audio_data[first_part:]
+                self.buffer_position = second_part
+            else:
+                self.audio_buffer[self.buffer_position:self.buffer_position + chunk_size] = audio_data
+                self.buffer_position += chunk_size
+                
+            if self.buffer_position >= self.buffer_size:
+                self.buffer_position = 0
+                self.buffer_filled = True
+            
+            # Only detect if buffer is filled and cooldown has passed
+            current_time = time.time()
+            if self.buffer_filled and current_time - self.last_detection_time > self.detection_cooldown:
+                if self.detector.detect(self.audio_buffer):
+                    logger.info("Wake word detected!")
+                    self.last_detection_time = current_time
                     
-                    self.wav_file = wave.open(filename, 'wb')
-                    self.wav_file.setnchannels(1)  # Mono
-                    self.wav_file.setsampwidth(2)  # 16-bit
-                    self.wav_file.setframerate(16000)  # 16kHz
-                    logger.info(f"Created new WAV file: {filename}")
-
-            # Convert to float32 for processing
-            audio_data = np.frombuffer(data, dtype=np.int16).astype(np.float32) / 32767.0
-            
-            # Apply clipping in float domain
-            audio_data = np.clip(audio_data, -1.0, 1.0)
-            
-            # Optional: Apply gain if needed
-            gain = 1.2  # Adjust this value based on your needs
-            audio_data = audio_data * gain
-            
-            # Clip again after gain to prevent distortion
-            audio_data = np.clip(audio_data, -1.0, 1.0)
-            
-            # Convert back to int16 for WAV file
-            audio_int16 = (audio_data * 32767).astype(np.int16)
-            
-            # Log audio levels periodically (every 100 chunks)
-            if self.audio_chunks % 100 == 0:
-                peak_level = np.max(np.abs(audio_int16))
-                rms_level = np.sqrt(np.mean(audio_int16.astype(np.float32)**2))
-                logger.debug(f"Audio Levels - Peak: {peak_level}, RMS: {rms_level}")
-            
-            if self.wav_file:
-                self.wav_file.writeframes(audio_int16.tobytes())
-                self.audio_chunks += 1
-                
         except Exception as e:
-            logger.error(f"Error handling audio data: {e}")
-            await self.save_recording()
+            logger.error(f"Error handling audio data: {e}", exc_info=True)
 
     async def handle_pipeline_start(
         self, 
@@ -236,37 +283,42 @@ class VoiceAssistantClient:
         self.conversation_id = None
         self.is_running = False
 
-    async def save_recording(self):
-        """Save the recorded audio to file"""
-        if self.wav_file:
-            try:
-                # Close the WAV file
-                wav_filename = self.wav_file.name
-                self.wav_file.close()
-                
-                # Get file size
-                file_size = os.path.getsize(wav_filename)
-                logger.info(f"Saved WAV file: {wav_filename}")
-                logger.info(f"WAV file size: {file_size} bytes")
-                
-            except Exception as e:
-                logger.error(f"Error saving audio file: {e}")
-            finally:
-                # Reset recording state
-                self.wav_file = None
-                self.recording_started = False
-
+    @backoff.on_exception(
+        backoff.expo,
+        Exception,
+        max_tries=5,
+        max_time=60
+    )
     async def connect(self):
-        """Connect to the ESPHome device"""
+        """Connect to the ESPHome device with retry logic"""
         try:
             await self.client.connect(login=True)
             logger.info(f"🔌 Connected to {self.host}:{self.port}")
-
-            # Get and log device info
+            
+            # Reset reconnection counters on successful connection
+            self.reconnect_attempts = 0
+            self.reconnect_delay = 1
+            
             device_info = await self.client.device_info()
             logger.info(f"📱 Device: {device_info.name} (ESPHome {device_info.esphome_version})")
-
+            
             # Subscribe to voice assistant events
+            await self.subscribe_to_events()
+            
+        except Exception as e:
+            logger.error(f"❌ Connection failed: {e}")
+            if self.reconnect_attempts < self.max_reconnect_attempts:
+                self.reconnect_attempts += 1
+                self.reconnect_delay *= 2  # Exponential backoff
+                logger.info(f"Retrying connection in {self.reconnect_delay} seconds...")
+                await asyncio.sleep(self.reconnect_delay)
+                await self.connect()
+            else:
+                raise RuntimeError("Max reconnection attempts reached")
+
+    async def subscribe_to_events(self):
+        """Subscribe to voice assistant events with error handling"""
+        try:
             logger.info("Subscribing to voice assistant events...")
             self.client.subscribe_voice_assistant(
                 handle_start=self.handle_pipeline_start,
@@ -274,51 +326,59 @@ class VoiceAssistantClient:
                 handle_audio=self.handle_audio
             )
             logger.info("✅ Subscribed to voice assistant events")
-
         except Exception as e:
-            logger.error(f"❌ Connection failed: {e}")
+            logger.error(f"Failed to subscribe to events: {e}")
             raise
 
-    async def disconnect(self):
-        """Disconnect from the device"""
-        await self.save_recording()
+    async def run(self):
+        """Main run loop with improved error handling"""
+        while True:
+            try:
+                await self.connect()
+                while True:
+                    await asyncio.sleep(1)
+                    # Add periodic connection check
+                    # logger.info(f"{dir(self.client)}")
+                    # if not self.client.connected:
+                    #     logger.warning("Connection lost, attempting to reconnect...")
+                    #     break
+                    
+            except asyncio.CancelledError:
+                logger.info("Shutting down...")
+                break
+            except Exception as e:
+                logger.error(f"Error in run loop: {e}")
+                await asyncio.sleep(5)  # Wait before retry
+            finally:
+                await self.cleanup()
+
+    async def cleanup(self):
+        """Clean up resources"""
         if self.voice_assistant_udp_server:
             self.voice_assistant_udp_server.stop()
-        await self.client.disconnect()
-        logger.info("Disconnected from device")
-
-    async def run(self):
-        """Main run loop"""
         try:
-            await self.connect()
-            while True:
-                await asyncio.sleep(0.1)
-        except asyncio.CancelledError:
-            logger.info("Shutting down...")
+            await self.client.disconnect()
         except Exception as e:
-            logger.error(f"Error in run loop: {e}")
-        finally:
-            await self.disconnect()
+            logger.error(f"Error during cleanup: {e}")
 
 async def main():
     # Configuration
-    HOST = "192.168.1.200"  # Replace with your ESPHome device's IP
-    ENCRYPTION_KEY = None    # Replace with encryption key if required
-    PORT = 6053             # Default ESPHome API port
+    HOST = "192.168.1.200"
+    ENCRYPTION_KEY = "B/ZTOpKW5IyL0jUv9InGeNOpVPdj4+oDO48fmwrh5Ak="
+    PORT = 6053
     
-    # Create and run client
-    client = VoiceAssistantClient(
-        host=HOST,
-        encryption_key=ENCRYPTION_KEY,
-        port=PORT
-    )
-    
-    try:
-        await client.run()
-    except KeyboardInterrupt:
-        logger.info("Stopping server...")
-    except Exception as e:
-        logger.error(f"Unhandled error: {e}")
+    # Create and run client with automatic retry
+    while True:
+        try:
+            client = VoiceAssistantClient(
+                host=HOST,
+                encryption_key=ENCRYPTION_KEY,
+                port=PORT
+            )
+            await client.run()
+        except Exception as e:
+            logger.error(f"Critical error, restarting client: {e}")
+            await asyncio.sleep(5)  # Wait before restarting
 
 if __name__ == "__main__":
     asyncio.run(main())
