@@ -42,7 +42,7 @@ class ESPDeviceState:
 
     def __post_init__(self):
         self.audio_buffer = np.zeros(self.buffer_size, dtype=np.int16)
-        self.detector = WakeWordDetector()
+        self.detector = WakeWordDetector(model_path="/Users/naveenjain/Documents/code/mirfa/custom_wake_word/my_model/mirfa.onnx")
         self.main_buffer = []
         self.vad_buffer = b''
 

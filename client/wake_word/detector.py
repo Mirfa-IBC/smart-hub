@@ -42,8 +42,9 @@ class WakeWordDetector:
                     raise FileNotFoundError(f"Custom model file not found at: {model_path}")
                 logger.info(f"Using custom model from: {model_path}")
                 self.oww = openwakeword.Model(
-                    custom_model_paths=[str(model_path)],
-                    inference_framework="onnx"
+                    wakeword_models=[str(model_path)],
+                    inference_framework="onnx",
+                    vad_threshold=0.3 
                 )
             else:
                 # Try to initialize with default model, downloading if needed
@@ -74,9 +75,9 @@ class WakeWordDetector:
         self.wake_word_model = wake_word_model
         self.last_detection_time = 0
         self.detection_cooldown = 0.3
-        self.detection_threshold = 0.3
+        self.detection_threshold = 0.4
         self.consecutive_detections = 0
-        self.consecutive_threshold = 3
+        self.consecutive_threshold = 2
         self.max_buffer_size = int(16000 * 1.5)  # 1.5 seconds at 16kHz
 
     def detect(self, audio_chunk):
