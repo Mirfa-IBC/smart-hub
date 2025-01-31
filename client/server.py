@@ -180,7 +180,7 @@ class VoiceAssistantClient:
         # Add detection state management
         self.last_detection_time = 0
         self.detection_cooldown = 0.5  
-        self.detector = WakeWordDetector();
+        self.detector = WakeWordDetector(model_path="/home/abc/smart-hub/models/mirfa.onnx");
         
         # Ensure recordings directory exists
         os.makedirs('recordings', exist_ok=True)
@@ -363,7 +363,7 @@ class VoiceAssistantClient:
 
 async def main():
     # Configuration
-    HOST = "192.168.1.200"
+    HOST = "192.168.1.199"
     ENCRYPTION_KEY = "B/ZTOpKW5IyL0jUv9InGeNOpVPdj4+oDO48fmwrh5Ak="
     PORT = 6053
     

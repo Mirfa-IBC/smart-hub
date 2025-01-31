@@ -20,14 +20,14 @@ class WakeWordDetector:
         """
         try:
             logger.info("Downloading wake word models...")
-            openwakeword.utils.download_models()
+            # openwakeword.utils.download_models()
             logger.info("Models downloaded successfully")
             return True
         except Exception as e:
             logger.error(f"Error downloading models: {str(e)}")
             return False
 
-    def __init__(self, wake_word_model="alexa", model_path=None):
+    def __init__(self, wake_word_model="mirfa", model_path=None):
         """
         Initialize the wake word detector.
         
@@ -42,17 +42,14 @@ class WakeWordDetector:
                     raise FileNotFoundError(f"Custom model file not found at: {model_path}")
                 logger.info(f"Using custom model from: {model_path}")
                 self.oww = openwakeword.Model(
-                    wakeword_models=[str(model_path)],
-                    inference_framework="onnx",
-                    vad_threshold=0.3 
+                    wakeword_model_paths=[str(model_path)] 
                 )
             else:
                 # Try to initialize with default model, downloading if needed
                 try:
                     logger.info(f"Attempting to load model: {wake_word_model}")
                     self.oww = openwakeword.Model(
-                        wakeword_models=[wake_word_model],
-                        inference_framework="onnx"
+                        wakeword_model_paths=[wake_word_model]
                     )
                 except Exception as e:
                     logger.info("Model not found, attempting to download...")

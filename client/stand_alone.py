@@ -42,7 +42,7 @@ class ESPDeviceState:
 
     def __post_init__(self):
         self.audio_buffer = np.zeros(self.buffer_size, dtype=np.int16)
-        self.detector = WakeWordDetector(model_path="/Users/naveenjain/Documents/code/mirfa/custom_wake_word/my_model/mirfa.onnx")
+        self.detector = WakeWordDetector(model_path="../models/mirfa.onnx")
         self.main_buffer = []
         self.vad_buffer = b''
 
@@ -322,7 +322,7 @@ async def main():
     # Configuration
     ESP_DEVICES = [
         {
-            "host": "192.168.1.11",
+            "host": "192.168.1.199",
             "encryption_key": "B/ZTOpKW5IyL0jUv9InGeNOpVPdj4+oDO48fmwrh5Ak=",
             "port": 6053
         }
