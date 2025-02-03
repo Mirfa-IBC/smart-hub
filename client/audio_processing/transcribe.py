@@ -75,3 +75,22 @@ class WhisperProcessor:
         
         return text
         
+
+    def transcribe_audio(self, audio_buffer: bytearray) -> str:
+        """Transcribe audio using Faster-Whisper"""
+        try:
+            # Convert bytearray to numpy array
+            audio_np = np.frombuffer(audio_buffer, dtype=np.int16).astype(np.float32) / 32768.0
+
+            # Resample to 16kHz (required by Whisper)
+            from scipy import signal
+            audio_resampled = signal.resample(audio_np, int(len(audio_np) * 16000 / 32000))
+
+            # Transcribe using Faster-Whisper
+            segments, _ = self.model.transcribe(audio_resampled, language="en")
+            transcription = " ".join([segment.text for segment in segments])
+
+            return transcription
+        except Exception as e:
+            logger.error(f"Error transcribing audio: {e}")
+            return ""

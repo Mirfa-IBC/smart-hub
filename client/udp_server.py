@@ -101,6 +101,7 @@ class VoiceAssistantUDPServer:
         # Initialize detector
         self.detector = WakeWordDetector(wake_word_model="alexa")
         self.vad =  VADProcessor()
+        self.transcriber = WhisperProcessor()
         self.detector.download_models()
 
     async def start_server(self):
@@ -189,7 +190,8 @@ class VoiceAssistantUDPServer:
                                         audio_duration = len(device.audio_buffer) / (2 * 32000)  # 2 bytes/sample, 32kHz
                                         if audio_duration >= self.vad.min_audio_length:
                                             device.save_audio(str(int(time.time())))
-                                            logger.info(f"Saved audio from {device.ip_address}")
+                                            transcription = self.transcriber.transcribe_audio(device.audio_buffer);
+                                            logger.info(f"Saved audio from {device.ip_address} {transcription}")
                                         # Reset regardless of duration to avoid repeated triggers
                                         device.listening = False
                                         device.audio_buffer.clear()
