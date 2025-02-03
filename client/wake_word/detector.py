@@ -7,10 +7,30 @@ import io
 import time
 import os
 import requests
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Dict, Optional
+from collections import defaultdict
+
+
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+@dataclass
+class MicrophoneState:
+    buffer: np.ndarray
+    consecutive_detections: int
+    last_detection_time: float
+    
+    @classmethod
+    def create_empty(cls):
+        return cls(
+            buffer=np.zeros(0),
+            consecutive_detections=0,
+            last_detection_time=0
+        )
+
 
 class WakeWordDetector:
     @staticmethod
@@ -20,14 +40,14 @@ class WakeWordDetector:
         """
         try:
             logger.info("Downloading wake word models...")
-            # openwakeword.utils.download_models()
+            openwakeword.utils.download_models()
             logger.info("Models downloaded successfully")
             return True
         except Exception as e:
             logger.error(f"Error downloading models: {str(e)}")
             return False
 
-    def __init__(self, wake_word_model="mirfa", model_path=None):
+    def __init__(self, wake_word_model="alexa", model_path=None):
         """
         Initialize the wake word detector.
         
@@ -42,14 +62,15 @@ class WakeWordDetector:
                     raise FileNotFoundError(f"Custom model file not found at: {model_path}")
                 logger.info(f"Using custom model from: {model_path}")
                 self.oww = openwakeword.Model(
-                    wakeword_model_paths=[str(model_path)] 
+                    wakeword_models=[str(model_path)] 
                 )
+                self.wake_word_model = wake_word_model;
             else:
                 # Try to initialize with default model, downloading if needed
                 try:
                     logger.info(f"Attempting to load model: {wake_word_model}")
                     self.oww = openwakeword.Model(
-                        wakeword_model_paths=[wake_word_model]
+                        wakeword_models=[wake_word_model]
                     )
                 except Exception as e:
                     logger.info("Model not found, attempting to download...")
@@ -76,84 +97,93 @@ class WakeWordDetector:
         self.consecutive_detections = 0
         self.consecutive_threshold = 2
         self.max_buffer_size = int(16000 * 1.5)  # 1.5 seconds at 16kHz
+        self.mic_states: Dict[str, MicrophoneState] = defaultdict(MicrophoneState.create_empty)
 
-    def detect(self, audio_chunk):
+
+    def detect(self, audio_chunk: np.ndarray, mic_id: str) -> bool:
         """
-        Detect wake word in audio chunk.
+        Detect wake word in audio chunk for a specific microphone.
         
         Args:
             audio_chunk (numpy.ndarray): Audio data as numpy array
+            mic_id (str): Unique identifier for the microphone (e.g., IP address)
             
         Returns:
             bool: True if wake word detected, False otherwise
         """
         current_time = time.time()
+        mic_state = self.mic_states[mic_id]
         
         try:
-            # Convert audio_chunk to numpy array if it's not already
-            audio_chunk = np.asarray(audio_chunk)
-            
             # Input validation
-            if audio_chunk.size == 0:
-                logger.warning("Received empty audio chunk")
-                return False
-                
-            if not np.isfinite(audio_chunk).all():
-                logger.warning("Audio chunk contains invalid values")
+            if not self._validate_audio(audio_chunk):
                 return False
 
-            # Append new audio to the buffer more efficiently
-            if len(self.buffer) == 0:
-                self.buffer = audio_chunk
-            else:
-                self.buffer = np.concatenate((self.buffer, audio_chunk))
+            # Update buffer for this specific microphone
+            mic_state.buffer = self._update_buffer(mic_state.buffer, audio_chunk)
 
-            # Keep only the last 1.5 seconds of audio
-            if len(self.buffer) > self.max_buffer_size:
-                self.buffer = self.buffer[-self.max_buffer_size:]
-
-            # Ensure the buffer is the correct size before prediction
-            if len(self.buffer) == self.max_buffer_size:
-                # Get the detection score
-                prediction = self.oww.predict(self.buffer)
+            # Process if buffer is full
+            if len(mic_state.buffer) == self.max_buffer_size:
+                prediction = self.oww.predict(mic_state.buffer)
                 confidence = prediction[self.wake_word_model]
 
-                # Check if wake word was detected
+                # Update detection state
                 if confidence > self.detection_threshold:
-                    self.consecutive_detections += 1
-                    logger.debug(f"Potential wake word detected. Consecutive detections: {self.consecutive_detections}")
+                    mic_state.consecutive_detections += 1
                 else:
-                    if self.consecutive_detections > 0:
-                        logger.debug(f"Resetting consecutive detections from {self.consecutive_detections} to 0")
-                    self.consecutive_detections = 0
+                    mic_state.consecutive_detections = 0
 
-                # Check if we have enough consecutive detections and cooldown period has passed
-                if (self.consecutive_detections >= self.consecutive_threshold and 
-                    current_time - self.last_detection_time > self.detection_cooldown):
-                    self.last_detection_time = current_time
-                    logger.info(f"Wake word confirmed with confidence: {confidence:.4f}")
-                    
-                    # Reset consecutive detections and buffer to prevent immediate re-triggering
-                    self.reset_buffer()
+                # Check for wake word detection
+                if self._is_wake_word_detected(mic_state, current_time):
+                    logging.info(f"Wake word detected on mic {mic_id} with confidence: {confidence:.4f}")
+                    self._reset_mic_state(mic_state)
                     return True
-                
-                # Reset if exceeded maximum consecutive detections
-                if self.consecutive_detections > self.consecutive_threshold * 2:
-                    logger.debug(f"Exceeded maximum consecutive detections ({self.consecutive_threshold * 2}). Resetting.")
-                    self.consecutive_detections = 0
-                    
+
+                # Reset if too many consecutive detections
+                if mic_state.consecutive_detections > self.consecutive_threshold * 2:
+                    mic_state.consecutive_detections = 0
+
         except Exception as e:
-            logger.error(f"Error in detect method: {str(e)}")
-            self.reset_buffer()
+            logging.error(f"Error in detect method for mic {mic_id}: {str(e)}")
+            self._reset_mic_state(mic_state)
             return False
-        
+
         return False
+
+    def _validate_audio(self, audio_chunk: np.ndarray) -> bool:
+        """Validate audio chunk data."""
+        audio_chunk = np.asarray(audio_chunk)
+        return audio_chunk.size > 0 and np.isfinite(audio_chunk).all()
+
+    def _update_buffer(self, buffer: np.ndarray, audio_chunk: np.ndarray) -> np.ndarray:
+        """Update the audio buffer for a microphone."""
+        if len(buffer) == 0:
+            buffer = audio_chunk
+        else:
+            buffer = np.concatenate((buffer, audio_chunk))
+            
+        # Keep only the latest audio
+        if len(buffer) > self.max_buffer_size:
+            buffer = buffer[-self.max_buffer_size:]
+            
+        return buffer
+
+    def _is_wake_word_detected(self, mic_state: MicrophoneState, current_time: float) -> bool:
+        """Check if wake word is detected based on consecutive detections and cooldown."""
+        return (mic_state.consecutive_detections >= self.consecutive_threshold and 
+                current_time - mic_state.last_detection_time > self.detection_cooldown)
 
     def reset_buffer(self):
         """Reset the audio buffer and detection state."""
         self.buffer = np.zeros(0)
         self.consecutive_detections = 0
-        logger.debug("Buffer and consecutive detections reset.")
+        # logger.debug("Buffer and consecutive detections reset.")
+    
+    def _reset_mic_state(self, mic_state: MicrophoneState):
+        """Reset the state for a specific microphone."""
+        mic_state.buffer = np.zeros(0)
+        mic_state.consecutive_detections = 0
+        mic_state.last_detection_time = time.time()
 
     def play_audio(self, audio_data):
         """
