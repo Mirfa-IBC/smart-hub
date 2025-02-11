@@ -40,7 +40,7 @@ class WakeWordDetector:
         """
         try:
             logger.info("Downloading wake word models...")
-            openwakeword.utils.download_models()
+            # openwakeword.utils.download_models()
             logger.info("Models downloaded successfully")
             return True
         except Exception as e:

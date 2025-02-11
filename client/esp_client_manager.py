@@ -257,11 +257,6 @@ async def main():
             "host": "192.168.1.200",
             "encryption_key": ENCRYPTION_KEY,
             "port": PORT
-        },
-        {
-            "host": "192.168.1.157",
-            "encryption_key": ENCRYPTION_KEY,
-            "port": PORT
         }
     ]
 
