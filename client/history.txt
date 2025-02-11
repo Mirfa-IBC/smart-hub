@@ -1,0 +1,1000 @@
+  573  common/install_cusparselt.sh 
+  574  export CUDA_VERSION=12.1 # as an example   
+  575  bash ./install_cusparselt.sh
+  576  wget 
+  577  raw.githubusercontent.com/pytorch/pytorch/5c6af2b583709f6176898c017424dc9981023c28/.ci/docker/
+  578  common/install_cusparselt.sh 
+  579  export CUDA_VERSION=12.1 # as an example   
+  580  bash ./install_cusparselt.sh
+  581  wget raw.githubusercontent.com/pytorch/pytorch/5c6af2b583709f6176898c017424dc9981023c28/.ci/docker/
+  582  common/install_cusparselt.sh 
+  583  sudo apt-get install libcusparse-dev
+  584  sudo apt-get update
+  585  sudo apt-get install build-essential cmake
+  586  sudo apt-get install libcusparse-dev
+  587  wget https://developer.download.nvidia.com/compute/cusparselt/redist/libcusparse_lt/linux-aarch64/libcusparse_lt-linux-aarch64-0.7.0.0-archive.tar.xz
+  588  ls
+  589  uname
+  590  uname -v
+  591  lsb_release -a
+  592  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb
+  593  sudo dpkg -i cuda-keyring_1.1-1_all.deb
+  594  sudo apt-get update
+  595  sudo apt-get -y install libcusparselt0 libcusparselt-dev
+  596  nvidia-smi
+  597  export CUDA_VERSION=12.6
+  598  bash ./install_cusparselt.sh
+  599  sudo apt-get -y install libcusparselt0 libcusparselt-dev
+  600  export TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl
+  601  python3 -m pip install --upgrade pip; python3 -m pip install numpy==’1.26.1’; python3 -m pip install --no-cache $TORCH_INSTALL
+  602  python3 -m pip install --upgrade pip; python3 -m pip install numpy=='1.26.1'; python3 -m pip install --no-cache $TORCH_INSTALL
+  603  conda list
+  604  conda uninstall torchvisio
+  605  conda uninstall torchvision
+  606  python3 -m pip install --upgrade pip; python3 -m pip install numpy=='1.26.1'; python3 -m pip install --no-cache $TORCH_INSTALL
+  607  python -v
+  608  nvcc --version
+  609  conda create -n ai-env python=3.12
+  610  conda deactivate
+  611  conda activate ai-env
+  612  export TORCH_INSTALL=path/to/torch-2.2.0a0+81ea7a4+nv23.12-cp38-cp38-linux_aarch64.whl
+  613  python3 -m pip install --upgrade pip; python3 -m pip install numpy=='1.26.1'; python3 -m pip install --no-cache $TORCH_INSTALL
+  614  export TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl
+  615  python3 -m pip install --upgrade pip; python3 -m pip install numpy=='1.26.1'; python3 -m pip install --no-cache $TORCH_INSTALL
+  616  conda create -n ai-env python=3.12
+  617  pip install ~/Downloads/torch-2.3.0-cp310-cp310-linux_aarch64.whl 
+  618  $JP_VERSION
+  619  export JP_VERSION=6.1.2
+  620  $PYT_VERSIOn
+  621  export PYT_VERSION=2.3
+  622  https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION/pytorch/$PYT_VERSION
+  623  wget https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION/pytorch/$PYT_VERSION
+  624  export JP_VERSION=6.1
+  625  nvcc --version
+  626  export JP_VERSION=12.6
+  627  wget https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION/pytorch/$PYT_VERSION
+  628  pip install ~/Downloads/torch-2.5.0a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl 
+  629  python --vesion
+  630  python --version
+  631  conda create -n ai-env python=3.10
+  632  conda deactivate
+  633  conda create -n ai-env python=3.10
+  634  pip install ~/Downloads/torch-2.5.0a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl 
+  635  conda activate i-env
+  636  conda activate ai-env
+  637  pip install ~/Downloads/torch-2.5.0a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl 
+  638  pip install packaging>=20.9 pyyaml>=5.1 requests tqdm>=4.42.1
+  639  pip install --upgrade pip
+  640  pip install packaging>=20.9 pyyaml>=5.1 requests tqdm>=4.42.1
+  641  pip install ~/Downloads/torch-2.5.0a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl 
+  642  python
+  643  pip install numpy
+  644  python
+  645  pip uninstall numpy
+  646  pip install 'numpy<2.0'
+  647  python
+  648  pip install 'torchvision>=0.16.0' --no-deps
+  649  ls
+  650  rm -rf *
+  651  ls
+  652  git clone --branch v2.1.0 https://github.com/pytorch/audio.git
+  653  cd audio && BUILD_SOX=1 python setup.py install
+  654  pip install build
+  655  pip install torchaudio --extra-index-url https://download.pytorch.org/whl/cu126
+  656  ls
+  657  BUILD_SOX=1 pip install .
+  658  python -c "import torch; print(torch.__version__)"
+  659  pip uninstall torchaudio
+  660  git stash -u
+  661  pip install ninja cmake
+  662  BUILD_SOX=1 pip install .
+  663  # Check which pip you're using
+  664  which pip
+  665  python -m pip --version
+  666  # Make sure torch is in your PYTHONPATH
+  667  python -c "import sys; print('\n'.join(sys.path))"
+  668  BUILD_SOX=1 pip install -v .
+  669  # First install build dependencies
+  670  pip install wheel setuptools
+  671  # Then try building
+  672  BUILD_SOX=1 python setup.py build
+  673  BUILD_SOX=1 python setup.py install
+  674  rm -rf build/
+  675  BUILD_SOX=1 python setup.py install
+  676  rm -rf build/
+  677  BUILD_SOX=1 CMAKE_BUILD_PARALLEL_LEVEL=1 pip install .
+  678  rm -rf build/
+  679  BUILD_SOX=1 CMAKE_BUILD_PARALLEL_LEVEL=1 pip install .
+  680  BUILD_SOX=1 python setup.py install
+  681  rm -rf build/
+  682  BUILD_SOX=1 python setup.py install MAKEFLAGS="-j1"
+  683  sudo swapon --show
+  684  sudo fallocate -l 4G /swapfile
+  685  sudo chmod 600 /swapfile
+  686  sudo mkswap /swapfile
+  687  sudo swapon /swapfile
+  688  BUILD_SOX=1 python setup.py install
+  689  rm -rf build/
+  690  BUILD_SOX=1 python setup.py install
+  691  rm -rf build/
+  692  BUILD_SOX=1 MAKEFLAGS="-j1" python setup.py install
+  693  cuDNN
+  694  sudo apt install ffmpeg libavformat-dev libavcodec-dev libavutil-dev libavdevice-dev libavfilter-dev
+  695  pip install cmake ninja
+  696  rm -rf build/
+  697  USE_CUDA=1 pip install -v -e . --no-use-pep517
+  698  sudo reboot now
+  699  apt list --installed | grep cuda-toolki
+  700  apt list --installed | grep cudnn
+  701  apt list --installed | grep nvidia-jetpack
+  702  ls
+  703  cd ai
+  704  ls
+  705  cd audio/
+  706  conda activate ai-env
+  707  rm -rf build/
+  708  USE_CUDA=1 pip install -v -e . --no-use-pep517
+  709  cd ..
+  710  # install the container tools
+  711  git clone https://github.com/dusty-nv/jetson-containers
+  712  bash jetson-containers/install.sh
+  713  # automatically pull & run any container
+  714  jetson-containers run $(autotag l4t-pytorch)
+  715  sudo nvpmodel -m 0
+  716  sudo apt-get install docker
+  717  sudo systemctl restart docker
+  718  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  719  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  720  sudo apt-get install docker-ce docker-ce-cli containerd.io
+  721  sudo apt-get update
+  722  sudo apt-get install     ca-certificates     curl     gnupg     lsb-release
+  723  sudo apt-get update
+  724  sudo apt-get install     ca-certificates     curl     gnupg     lsb-release
+  725  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  726  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  727  sudo apt-get update
+  728  sudo apt-get install docker-ce docker-ce-cli containerd.io
+  729  sudo usermod -aG docker $USER
+  730  sudo systemctl start docker
+  731  sudo systemctl enable docker
+  732  git clone https://github.com/dusty-nv/jetson-containers
+  733  bash jetson-containers/install.sh
+  734  vi /etc/docker/daemon.json 
+  735  sudo nano /etc/docker/daemon.json 
+  736  $ sudo systemctl restart docker
+  737  Default Runtime: nvidia
+  738  cd audio/
+  739  sudo init 3
+  740  cd ai
+  741  source ai-env/bin/activate
+  742  conda activate ai-env
+  743  cd audio/
+  744  BUILD_SOX=1 MAKEFLAGS="-j1" python setup.py install
+  745  rm -rf buid
+  746  BUILD_SOX=1 MAKEFLAGS="-j1" python setup.py install
+  747  rm -rf buid
+  748  BUILD_SOX=1 MAKEFLAGS="-j1" python setup.py install
+  749  sudo init 5
+  750  ngc registry resource download-version nvidia/riva/riva_quickstart_arm64:2.18.0
+  751  sudo apt-get install nc-cli
+  752  sudo apt-get install ngc-cli
+  753  wget --content-disposition https://api.ngc.nvidia.com/v2/resources/nvidia/ngc-apps/ngc_cli/versions/3.58.0/files/ngccli_arm64.zip -O ngccli_arm64.zip && unzip ngccli_arm64.zip
+  754  chmod u+x ngc-cli/ngc
+  755  echo "export PATH=\"\$PATH:$(pwd)/ngc-cli\"" >> ~/.bash_profile && source ~/.bash_profile
+  756  ngc config set
+  757  ngc registry resource download-version nvidia/riva/riva_quickstart_arm64:2.18.0
+  758  ngc config set
+  759  ngc registry resource download-version nvidia/riva/riva_quickstart_arm64:2.18.0
+  760  ls
+  761  pwd
+  762  cd riva_quickstart_arm64_v2.18.0/
+  763  ls
+  764  bash riva_init.sh 
+  765  sudo bash riva_init.sh 
+  766  vi a.txt
+  767  sudo reboot now
+  768  cd smart-hub/
+  769  cd client/
+  770  source .venv/bin/activate
+  771  python jetson-server/esp32_client.py 
+  772  pip install aioesphomeapi
+  773  python jetson-server/esp32_client.py 
+  774  pip install redis
+  775  python jetson-server/esp32_client.py 
+  776  cd ..
+  777  cd seed_mic/
+  778  cd ..
+  779  cd client/
+  780  python jetson-server/esp2_discovery.py 
+  781  redis-cli
+  782  python jetson-server/esp2_discovery.py 
+  783  source .venv/bin/activate
+  784  python jetson-server/esp32_client.py 
+  785  python jetson-server/udp_server.py 
+  786  source .venv/bin/activate
+  787  python jetson-server/esp32_client.py 
+  788  cd ..
+  789  ls
+  790  cd client/
+  791  ls
+  792  python server.py 
+  793  pip install backoff
+  794  python server.py 
+  795  pwd
+  796  cd ../models/
+  797  pwd
+  798  cd ../client/
+  799  python server.py 
+  800  ipython
+  801  python server.py 
+  802  ipython
+  803  python server.py 
+  804  python jetson-server/esp32_client.py 
+  805  python server.py 
+  806  python jetson-server/esp32_client.py 
+  807  ipython
+  808  python jetson-server/esp32_client.py 
+  809  cd ..
+  810  git add .
+  811  git commit -m "changes"
+  812  git config --global user.email 
+  813  git config --global user.email "naveen@mirfaibc.com"
+  814  git commit -m "changes"
+  815  git push
+  816  git stash
+  817  git pull
+  818  cd client/
+  819  python udp_server.py 
+  820  pip freeze
+  821  pip freeze | grep open
+  822  pip install openwakeword=0.6.0
+  823  pip install openwakeword==0.6.0
+  824  pip freeze | grep
+  825  pip install tflite
+  826  pip install tflite=2.8
+  827  pip install tflite==2.8
+  828  pip install tflite==2.18
+  829  pip install tflite-runtime
+  830  python udp_server.py 
+  831  vi udp_server.py 
+  832  python udp_server.py 
+  833  vi udp_server.py 
+  834  nano udp_server.py 
+  835  vi udp_server.py 
+  836  python udp_server.py 
+  837  vi udp_server.py 
+  838  vi wake_word/detector.py 
+  839  pwd
+  840  vi udp_server.py 
+  841  nano udp_server.py 
+  842  python udp_server.py 
+  843  pyhon
+  844  ipython
+  845  nano wake_word/detector.py 
+  846  python udp_server.py 
+  847  ls
+  848  pwd
+  849  python
+  850  deactivate
+  851  conda create -n venv  python=3.11
+  852  conda activate venv
+  853  pip instll -r requirements.txt 
+  854  pip install -r requirements.txt 
+  855  pip install openwakeword==0.6.0
+  856  git stash
+  857  python udp_server.py 
+  858  clear
+  859  python udp_server.py 
+  860  pip install faster-whisper
+  861  python udp_server.py 
+  862  pip install torchaudio
+  863  python udp_server.py 
+  864  vi audio_processing/transcribe.py 
+  865  python udp_server.py 
+  866  cd smart-hub/client/
+  867  source  .venv/bin/activate
+  868  python jetson-server/esp2_discovery.py 
+  869  python esp_client_manager.py 
+  870  git pull
+  871  python esp_client_manager.py 
+  872  git pull
+  873  python esp_client_manager.py 
+  874  ls
+  875  rm captured_audio_192.168.1.*
+  876  python esp_client_manager.py 
+  877  ls
+  878  ipython
+  879  pip install torch
+  880  ipython
+  881  pip install faster-whisper
+  882  ipython
+  883  sudo jetson_clocks
+  884  ipython
+  885  pip install nvidia-cublas-cu12 nvidia-cudnn-cu12==9.*
+  886  export LD_LIBRARY_PATH=`python3 -c 'import os; import nvidia.cublas.lib; import nvidia.cudnn.lib; print(os.path.dirname(nvidia.cublas.lib.__file__) + ":" + os.path.dirname(nvidia.cudnn.lib.__file__))'`
+  887  ipython
+  888  cd ..
+  889  ls
+  890  cd ..
+  891  ls
+  892  cd riva_quickstart_arm64_v2.18.0/
+  893  ls
+  894  ./riva_init.sh 
+  895  ./riva_start.sh 
+  896  ./riva_init.sh 
+  897  ./riva_start.sh 
+  898  docker logs riva-speech
+  899  nvidia-smi --query-gpu=compute_cap --format=csv
+  900  ls
+  901  cd asr_lm_tools/
+  902  ;s
+  903  ls
+  904  cd //
+  905  cd ..
+  906  ls
+  907  cd -
+  908  ls
+  909  cd 
+  910  cd /home/abc/riva_quickstart_arm64_v2.18.0/
+  911  ls
+  912  cd model_repository/
+  913  ls
+  914  cd models/
+  915  ls
+  916  cd ..
+  917  cd riva-trt-riva-punctuation-en-US-nn-bert-base-uncased\
+  918  cd riva-trt-riva-punctuation-en-US-nn-bert-base-uncased
+  919  ls
+  920  cd models/
+  921  ls
+  922  cd riva-trt-riva-punctuation-en-US-nn-bert-base-uncased
+  923  ls
+  924  cd a
+  925  cd 1
+  926  ls
+  927  rm model.plan 
+  928  sudo rm model.plan 
+  929  ls
+  930  cd ..
+  931  cd //
+  932  cd -
+  933  cd ..
+  934  ls
+  935  cd ..
+  936  ls
+  937  cd ..
+  938  ls
+  939  ./riva_init.sh 
+  940  ./riva_start.sh 
+  941  docker logs riva-speech
+  942  kubs
+  943  docker logs 
+  944  docker
+  945  soc ps
+  946  docker ps -a
+  947  docker logs riva-speech
+  948  la
+  949  ls
+  950  uname
+  951  cat /etc/nv_tegra_release         # Shows JetPack version
+  952  nvcc --version                    # Shows CUDA version
+  953  dpkg -l | grep -i cuda           # Lists installed CUDA packages
+  954  lsb_release 
+  955  lsb_release -a
+  956  nvidia-smi
+  957  nvcc --version
+  958  dpkg -l | grep -i cublas
+  959  dpkg -l | grep -i cudnn
+  960  dpkg -l | grep -i nccl
+  961  (.venv) (base) abc@ubuntu:~/riva_quickstart_arm64_v2.18.0$ dpkg -l | grep -i nccl
+  962  ii  libvncclient1:arm64                        0.9.13+dfsg-3build2                         arm64        API to write one's own VNC server - client library
+  963  dpkg -l | grep -i tensorrt
+  964  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb
+  965  sudo dpkg -i cuda-keyring_1.1-1_all.deb
+  966  sudo apt-get update
+  967  sudo apt-get install libnccl2 libnccl-dev
+  968  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/sbsa/cuda-keyring_1.1-1_all.deb 
+  969  sudo dpkg -i cuda-keyring_1.1-1_all.deb
+  970  sudo apt-get update
+  971  sudo apt install libnccl2=2.25.1-1+cuda12.4 libnccl-dev=2.25.1-1+cuda12.4 
+  972  sudo apt install libnccl2=2.25.1-1+cuda12.4 libnccl-dev=2.25.1-1+cuda12.6
+  973  sudo apt install libnccl2=2.25.1-1+cuda12.6 libnccl-dev=2.25.1-1+cuda12.6
+  974  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/sbsa/cuda-keyring_1.1-1_all.deb 
+  975  sudo dpkg -i cuda-keyring_1.1-1_all.deb
+  976  udo apt install libnccl2=2.25.1-1+cuda12.8 libnccl-dev=2.25.1-1+cuda12.8 
+  977  sudo apt install libnccl2=2.25.1-1+cuda12.8 libnccl-dev=2.25.1-1+cuda12.8 
+  978  sudo apt install libnccl2 libnccl-dev
+  979  sudo apt install libnccl2=2.25.1-1+cuda12.6 libnccl-dev=2.25.1-1+cuda12.6 
+  980  sudo apt list libnccl2 
+  981  sudo apt list libnccl2
+  982  sudo apt list libnccl
+  983  docker --version
+  984  curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg   && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list |     sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' |     sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  985  sed -i -e '/experimental/ s/^#//g' /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  986  sudo apt-get update
+  987  sudo apt-get install -y nvidia-container-toolkit
+  988  sudo nvidia-ctk runtime configure --runtime=docker
+  989  cat /etc/docker/daemon.json
+  990  sudo systemctl restart docker
+  991  nvidia-ctk runtime configure --runtime=docker --config=$HOME/.config/docker/daemon.json
+  992  systemctl --user restart docker
+  993  sudo nvidia-ctk config --set nvidia-container-cli.no-cgroups --in-place
+  994  sudo systemctl restart docker
+  995  deactivate 
+  996  conda create --name nemo python==3.10.12
+  997  conda activate nemo
+  998  conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+  999  cond deactivate
+ 1000  conda deactivate
+ 1001  conda create --name nemo python==3.10.12
+ 1002  conda activate nemo
+ 1003  conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+ 1004  python
+ 1005  pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+ 1006  conda ininstall pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+ 1007  conda uninstall pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+ 1008  pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+ 1009  python
+ 1010  pip freze
+ 1011  pip freeze
+ 1012  pip install nvidia-cublas-cu12 nvidia-cudnn-cu12==9.*
+ 1013  export LD_LIBRARY_PATH=`python3 -c 'import os; import nvidia.cublas.lib; import nvidia.cudnn.lib; print(os.path.dirname(nvidia.cublas.lib.__file__) + ":" + os.path.dirname(nvidia.cudnn.lib.__file__))'`
+ 1014  echo $LD_LIBRARY_PATH=
+ 1015  echo $LD_LIBRARY_PATH
+ 1016  pip install faster-whisper
+ 1017  python
+ 1018  cd ..
+ 1019  cd smart-hub/
+ 1020  cd client/
+ 1021  ls
+ 1022  ipyhon
+ 1023  python
+ 1024  pip uninstall faster-whisper
+ 1025  git clone --recursive https://github.com/OpenNMT/CTranslate2.git
+ 1026  echo $LD_LIBRARY_PATH
+ 1027  echo $PATH
+ 1028  export PATH=/usr/local/cuda/bin:$PATH
+ 1029  export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+ 1030  pip install --no-cache-dir ctranslate2
+ 1031  python
+ 1032  pip uninstal ctranslate2
+ 1033  pip uninstall ctranslate2
+ 1034  pip install --no-cache-dir ctranslate2
+ 1035  python
+ 1036  pip uninstall ctranslate2
+ 1037  ls
+ 1038  cd CTranslate2/
+ 1039  ls
+ 1040  mkdir build && cd build
+ 1041  cmake .. -DWITH_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
+ 1042  sudo apt-get install -y libopenblas-dev
+ 1043  rm -rf .
+ 1044  ls
+ 1045  cd ..
+ 1046  rm -rf build
+ 1047  mkdir build 
+ 1048  cd build
+ 1049  cmake .. -DWITH_CUDA=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1050  make -j1
+ 1051  sudo make install
+ 1052  python3 -c "import ctranslate2; print(ctranslate2.__version__); print('CUDA available:', ctranslate2.get_supported_compute_types())"
+ 1053  pip show ctranslate2
+ 1054  ls
+ 1055  sudo ldconfig
+ 1056  ls
+ 1057  cd ..
+ 1058  cd python/
+ 1059  pip install -r install_requirements.txt
+ 1060  python setup.py bdist_wheel
+ 1061  pip install dist/*.whl
+ 1062  python3 -c "import ctranslate2; print('CUDA available:', ctranslate2.get_supported_compute_types())"
+ 1063  python3 -c "import ctranslate2; print('CUDA available:', ctranslate2.get_supported_compute_types('cuda'))"
+ 1064  python
+ 1065  pip install faster-whsiper
+ 1066  pip install faster-whisper
+ 1067  python
+ 1068  cd //
+ 1069  cd -
+ 1070  cd ..
+ 1071  pyht
+ 1072  python
+ 1073  cd CTranslate2/
+ 1074  ls
+ 1075  export CTRANSLATE2_ROOT=/usr/local
+ 1076  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ 1077  echo 'export CTRANSLATE2_ROOT=/usr/local' >> ~/.bashrc
+ 1078  echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+ 1079  source ~/.bashrc
+ 1080  cd python/
+ 1081  python setup.py bdist_wheel
+ 1082  conda activate nemo
+ 1083  python setup.py bdist_wheel
+ 1084  pip install dist/*.whl
+ 1085  pip install dist/*.whl --force-reinstall
+ 1086  python3 -c "import ctranslate2; print('CUDA available:', ctranslate2.get_supported_compute_types('cuda'))"
+ 1087  python3 -c "import ctranslate2; print(dir(ctranslate2))"
+ 1088  pip uninstall faster-whisper
+ 1089  pip install faster-whisper
+ 1090  cd .. 
+ 1091  cd ..
+ 1092  pyhton
+ 1093  python
+ 1094  sudo apt-get install libcudnn8
+ 1095  cd ~/smart-hub/client/CTranslate2/build
+ 1096  rm -rf *
+ 1097  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1098  make -j4
+ 1099  sudo make install
+ 1100  sudo ldconfig
+ 1101  # Rebuild and reinstall Python package
+ 1102  cd ../python
+ 1103  python setup.py bdist_wheel
+ 1104  pip install dist/*.whl --force-reinstall
+ 1105  cd..
+ 1106  cd ..
+ 1107  python
+ 1108  pip freeze | grep torch
+ 1109  cd CTranslate2/
+ 1110  git checkout v4.4.0
+ 1111  cd ~/smart-hub/client/CTranslate2/build
+ 1112  rm -rf *
+ 1113  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1114  make -j4
+ 1115  sudo make install
+ 1116  sudo ldconfig
+ 1117  # Rebuild and reinstall Python package
+ 1118  cd ../python
+ 1119  python setup.py bdist_wheel
+ 1120  pip install dist/*.whl --force-reinstall
+ 1121  pip uninstall ctransalte2
+ 1122  ls
+ 1123  git status
+ 1124  python setup.py bdist_wheel
+ 1125  rm -rf build/
+ 1126  python setup.py bdist_wheel
+ 1127  pip install dist/*.whl --force-reinstall
+ 1128  rm -rf dist/
+ 1129  python setup.py bdist_wheel
+ 1130  pip install dist/*.whl --force-reinstall
+ 1131  cd ..
+ 1132  # Try this to check CUDA availability
+ 1133  python3 -c "import ctranslate2; print('CUDA device count:', ctranslate2.get_cuda_device_count())"
+ 1134  # Or this to see what compute types are available
+ 1135  python3 -c "import ctranslate2; print(dir(ctranslate2))"
+ 1136  pip install faster-whisper --no-deps
+ 1137  python
+ 1138  cd CTranslate2/
+ 1139  cd build/
+ 1140  ls
+ 1141  cat /usr/include/aarch64-linux-gnu/cudnn_version.h | grep CUDNN_MAJOR -A 2
+ 1142  ls /usr/local/cuda
+ 1143  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1144  whereis cudnn.h
+ 1145  CUDNN_H_PATH=$(whereis cudnn.h)
+ 1146  echo $CUDNN_H_PATH=
+ 1147  sudo apt-get install zlib1g
+ 1148  apt list cudnn9
+ 1149  apt list cudnn
+ 1150  sudo apt-get -y install cudnn9-cuda-12
+ 1151  CUDNN_H_PATH=$(whereis cudnn.h)
+ 1152  echo $CUDNN_H_PATH=
+ 1153  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1154  ls
+ 1155  rm -rf *
+ 1156  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1157  make -j4
+ 1158  sudo make install
+ 1159  sudo ldconfig
+ 1160  cd ../python/
+ 1161  rm -rf dist/
+ 1162  pip uninstall ctranslate2
+ 1163  python setup.py bdist_wheel
+ 1164  pip install dist/*.whl --force-reinstall
+ 1165  python3 -c "import ctranslate2; print('CUDA device count:', ctranslate2.get_cuda_device_count())"
+ 1166  python setup.py bdist_wheel
+ 1167  pip install dist/*.whl --force-reinstall
+ 1168  python3 -c "import ctranslate2; print('CUDA device count:', ctranslate2.get_cuda_device_count())"
+ 1169  history 
+ 1170  python3 -c "import ctranslate2; print('CUDA available:', ctranslate2.get_supported_compute_types('cuda'))"
+ 1171  export LD_LIBRARY_PATH=`python3 -c 'import os; import nvidia.cublas.lib; import nvidia.cudnn.lib; print(os.path.dirname(nvidia.cublas.lib.__file__) + ":" + os.path.dirname(nvidia.cudnn.lib.__file__))'`
+ 1172  rm -rf dist/
+ 1173  python setup.py bdist_wheel
+ 1174  rm -rf build/
+ 1175  rm -rf dist/
+ 1176  python setup.py bdist_wheel
+ 1177  pip install dist/*.whl --force-reinstall
+ 1178  python3 -c "import ctranslate2; print('CUDA available:', ctranslate2.get_supported_compute_types('cuda'))"
+ 1179  rm -rf dist/
+ 1180  rm -rf build/
+ 1181  cd ../build/
+ 1182  ls 
+ 1183  rm -rf *
+ 1184  ls
+ 1185  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1186  make -j0
+ 1187  make -j
+ 1188  rm -rf *
+ 1189  make -j1
+ 1190  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1191  make -j1
+ 1192  rm -rf *
+ 1193  make -j3
+ 1194  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1195  make -j3
+ 1196  cd ../python/
+ 1197  ls
+ 1198  cd ../build/
+ 1199  sudo make install
+ 1200  sudo ldconfig
+ 1201  cd ../python
+ 1202  python setup.py bdist_wheel
+ 1203  pip install dist/*.whl --force-reinstall
+ 1204  python3 -c "import ctranslate2; print('CUDA available:', ctranslate2.get_supported_compute_types('cuda'))"
+ 1205  python
+ 1206  cd ..
+ 1207  python
+ 1208  pip uninstall faster-whisper
+ 1209  pip uninstall ctranslate2
+ 1210  cd CTranslate2/
+ 1211  cd build/
+ 1212  ls
+ 1213  rm -rf *
+ 1214  cd ..
+ 1215  git sttaus
+ 1216  git status
+ 1217  cd python/
+ 1218  rm -rf dist/
+ 1219  rm -rf build/
+ 1220  cd ../build/
+ 1221  echo $LD_LIBRARY_PATH
+ 1222  echo $CTRANSLATE2_ROOT
+ 1223  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ 1224  echo 'export CTRANSLATE2_ROOT=/usr/local' >> ~/.bashrc
+ 1225  echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+ 1226  source ~/.bashrc
+ 1227  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DWITH_MKL=OFF -DBLAS_BACKEND=OPENBLAS
+ 1228  make -j4
+ 1229  ls /usr/local
+ 1230  cd li
+ 1231  ls /usr/local/lib
+ 1232  ls /usr/local/bin
+ 1233  ls /usr/local/bin/ct2-translator 
+ 1234  ls -ltr /usr/local/bin/ct2-translator 
+ 1235  sudo make install
+ 1236  ls -ltr /usr/local/bin/ct2-translator 
+ 1237  cd ../python
+ 1238  pip install -r install_requirements.txt
+ 1239  python setup.py bdist_wheel
+ 1240  pip freeze
+ 1241  pip uninstall ctranslate2
+ 1242  pip install dist/*.whl --force-reinstall
+ 1243  python
+ 1244  history 
+ 1245  python3 -c "import ctranslate2; print(ctranslate2.__version__); print('CUDA available:', ctranslate2.get_supported_compute_types())"
+ 1246  # Check version first
+ 1247  python3 -c "import ctranslate2; print('Version:', ctranslate2.__version__)"
+ 1248  # Import and check Translator class capabilities
+ 1249  python3 -c "from ctranslate2.models import Translator; print('Available device indexes:', Translator.available_device_indexes())"
+ 1250  python3 -c "from ctranslate2 import models; print(dir(models))"
+ 1251  conda activate nemo
+ 1252  python3 -c "from ctranslate2 import models; print(dir(models))"
+ 1253  python3 -c "from ctranslate2.models import Translator; print('Available device indexes:', Translator.available_device_indexes())"
+ 1254  cd ~/smart-hub/client/CTranslate2/build
+ 1255  rm -rf *
+ 1256  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCUDNN_INCLUDE_DIR=/usr/include -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so
+ 1257  make -j4
+ 1258  sudo make install
+ 1259  sudo ldconfig
+ 1260  cd ~/smart-hub/client/CTranslate2/build
+ 1261  rm -rf *
+ 1262  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCUDNN_INCLUDE_DIR=/usr/include -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so
+ 1263  make -j4
+ 1264  sudo make install
+ 1265  sudo ldconfig
+ 1266  ls
+ 1267  rm -rf *
+ 1268  cmake .. -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCUDNN_INCLUDE_DIR=/usr/include -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so
+ 1269  sudo apt-get update
+ 1270  sudo apt-get install libopenblas-dev
+ 1271  sudo apt autoremove
+ 1272  ls /usr/lib/aarch64-linux-gnu/libcudnn.so
+ 1273  cd ~/smart-hub/client/CTranslate2/build
+ 1274  rm -rf *
+ 1275  cmake .. -DWITH_CUDA=ON          -DWITH_CUDNN=ON          -DWITH_MKL=OFF          -DBLAS_BACKEND=OPENBLAS          -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda          -DCUDNN_INCLUDE_DIR=/usr/include          -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so
+ 1276  make -j4
+ 1277  sudo make install
+ 1278  sudo ldconfig
+ 1279  cd ../python
+ 1280  export CTRANSLATE2_ROOT=/usr/local
+ 1281  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ 1282  pip uninstall ctranslate2
+ 1283  python setup.py clean
+ 1284  python setup.py bdist_wheel
+ 1285  pip install dist/*.whl --force-reinstall
+ 1286  python --version
+ 1287  pip uninstall -y ctranslate2
+ 1288  rm -rf build/ dist/ *.egg-info/
+ 1289  python setup.py bdist_wheel --python-tag cp310
+ 1290  pip install dist/ctranslate2-4.4.0-cp310-cp310-linux_aarch64.whl --force-reinstall
+ 1291  python -c "import ctranslate2; print('Version:', ctranslate2.__version__)"
+ 1292  python3 -c "from ctranslate2.models import Translator; print('Available device indexes:', Translator.available_device_indexes())"
+ 1293  python3 -c "import ctranslate2; print(ctranslate2.__version__); print('CUDA available:', ctranslate2.get_supported_compute_types())"
+ 1294  cd ..
+ 1295  python
+ 1296  pip inseall faster-whsiper --no-deps
+ 1297  pip install faster-whsiper --no-deps
+ 1298  pip install faster-whisper --no-deps
+ 1299  python
+ 1300  cd CTranslate2/
+ 1301  git checkout master
+ 1302  pip uninstall ctranslate2
+ 1303  pip uninstall faster-whisper
+ 1304  cd build/
+ 1305  ls
+ 1306  rm -rf *
+ 1307  ls
+ 1308  cd ../python/
+ 1309  ls
+ 1310  python setup.py clean
+ 1311  ls
+ 1312  rm -rf build/
+ 1313  rm -rf dist/
+ 1314  cd ..
+ 1315  cd build/
+ 1316  cmake .. -DWITH_CUDA=ON          -DWITH_CUDNN=ON          -DWITH_MKL=OFF          -DBLAS_BACKEND=OPENBLAS          -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda          -DCUDNN_INCLUDE_DIR=/usr/include          -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so
+ 1317  make -j10
+ 1318  sudo make install
+ 1319  ct2-translator --help
+ 1320  ldconfig -p | grep ctranslate2
+ 1321  ldd /usr/local/lib/libctranslate2.so
+ 1322  ct2-translator --version
+ 1323  ldd /usr/local/lib/libctranslate2.so | grep cudnn
+ 1324  cd ~/smart-hub/client/CTranslate2/build
+ 1325  rm -rf *
+ 1326  cmake .. -DWITH_CUDA=ON          -DWITH_CUDNN=ON          -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda          -DCUDNN_INCLUDE_DIR=/home/abc/miniforge3/envs/nemo/lib/python3.10/site-packages/nvidia/cudnn/include          -DCUDNN_LIBRARY=/home/abc/miniforge3/envs/nemo/lib/python3.10/site-packages/nvidia/cudnn/lib/libcudnn.so          -DWITH_MKL=OFF          -DBLAS_BACKEND=OPENBLAS
+ 1327  make -j4
+ 1328  sudo make install
+ 1329  sudo ldconfig
+ 1330  conda list | grep cudnn
+ 1331  conda remove cudnn
+ 1332  conda uninstall nvidia-cudnn-cu12 
+ 1333  # Remove NVIDIA packages installed via pip
+ 1334  pip uninstall nvidia-cudnn-cu12
+ 1335  pip uninstall nvidia-cublas-cu12
+ 1336  conda list | grep nvidia
+ 1337  pip list | grep nvidia
+ 1338  conda list | grep nvidia
+ 1339  pip list | grep nvidia
+ 1340  ls -l /usr/lib/aarch64-linux-gnu/libcudnn*
+ 1341  dpkg -l | grep cudnn
+ 1342  cd ~/smart-hub/client/CTranslate2/build
+ 1343  rm -rf *
+ 1344  cmake .. -DWITH_CUDA=ON          -DWITH_CUDNN=ON          -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda          -DCUDNN_INCLUDE_DIR=/usr/include          -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so          -DWITH_MKL=OFF          -DBLAS_BACKEND=OPENBLAS
+ 1345  make -j4
+ 1346  sudo make install
+ 1347  sudo ldconfig
+ 1348  # Check library linking
+ 1349  ldd /usr/local/lib/libctranslate2.so | grep cudnn
+ 1350  # Check Python
+ 1351  python3 -c "from ctranslate2 import Translator; print('Built with cuDNN:', hasattr(Translator, 'has_cudnn'))"
+ 1352  ldd /usr/local/lib/libctranslate2.so | grep cudnn
+ 1353  cd ../python
+ 1354  rm -rf build/ dist/ *.egg-info/
+ 1355  python setup.py clean
+ 1356  python setup.py bdist_wheel
+ 1357  pip install dist/*.whl --force-reinstall
+ 1358  python3 -c "from ctranslate2 import Translator; print('Built with cuDNN:', hasattr(Translator, 'has_cudnn'))"
+ 1359  ldd /usr/local/lib/libctranslate2.so | grep cudnn
+ 1360  python3 -c "import ctranslate2; print(dir(ctranslate2))"
+ 1361  python3 -c "from ctranslate2.models import Translator"
+ 1362  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ 1363  python3 -c "import ctranslate2._ext; print(dir(ctranslate2._ext))"
+ 1364  python3 -c "from ctranslate2._ext import Translator; print('Loaded successfully')"
+ 1365  conda deactivate nemo
+ 1366  conda deactivate 
+ 1367  conda create --name nemo python==3.10.12
+ 1368  conda activate nemo
+ 1369  exit
+ 1370  history
+ 1371  ps aux --sort=-%mem | head -n 10
+ 1372  source ct2_env/bin/activate
+ 1373  python esp_client_manager.py 
+ 1374  conda activate nemo
+ 1375  cd smart-hub/
+ 1376  ls
+ 1377  cd client/
+ 1378  ls
+ 1379  cd CTranslate2/
+ 1380  cd build/
+ 1381  echo $LD_LIBRARY_PATH
+ 1382  cd ~/smart-hub/client/CTranslate2
+ 1383  rm -rf build/
+ 1384  cmake .. -DWITH_CUDA=ON          -DWITH_CUDNN=ON          -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda          -DCUDNN_INCLUDE_DIR=/usr/include          -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so          -DWITH_MKL=OFF          -DBLAS_BACKEND=OPENBLAS          -DWITH_PYTHON=ON          -DPython_EXECUTABLE=$(which python3)
+ 1385  cd bu
+ 1386  cd build
+ 1387  ls
+ 1388  mkdir build && cd build
+ 1389  cmake .. -DWITH_CUDA=ON          -DWITH_CUDNN=ON          -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda          -DCUDNN_INCLUDE_DIR=/usr/include          -DCUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu/libcudnn.so          -DWITH_MKL=OFF          -DBLAS_BACKEND=OPENBLAS          -DWITH_PYTHON=ON          -DPython_EXECUTABLE=$(which python3)
+ 1390  make -j4
+ 1391  sudo make install
+ 1392  sudo ldconfig
+ 1393  cd ../python
+ 1394  rm -rf build/ dist/ *.egg-info/
+ 1395  python setup.py clean
+ 1396  python setup.py bdist_wheel
+ 1397  pip install dist/*.whl --force-reinstall
+ 1398  pip install -r install_requirements.txt 
+ 1399  cd ../python
+ 1400  rm -rf build/ dist/ *.egg-info/
+ 1401  python setup.py clean
+ 1402  python setup.py bdist_wheel
+ 1403  pip install dist/*.whl --force-reinstall
+ 1404  python3 -c "import ctranslate2._ext; print(dir(ctranslate2._ext))"
+ 1405  export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ 1406  python3 -c "import ctranslate2._ext; print(dir(ctranslate2._ext))"
+ 1407  python3 -c "from ctranslate2._ext import Translator; print('Loaded successfully')"
+ 1408  python3 -c "import ctranslate2; print(dir(ctranslate2))"
+ 1409  echo $CTRANSLATE2_ROOT
+ 1410  echo $LD_LIBRARY_PATH
+ 1411  echo $CTRANSLATE2_ROOT
+ 1412  nvcc --version
+ 1413  ldconfig -p | grep cudnn
+ 1414  python3.10 -m venv ct2_env
+ 1415  source ct2_env/bin/activate
+ 1416  pip install --upgrade pip setuptools wheel
+ 1417  cd ..
+ 1418  deactivate \
+ 1419  deactivate 
+ 1420  conda deactivate
+ 1421  python3.10 -m venv ct2_env
+ 1422  source ct2_env/bin/activate
+ 1423  pip install --upgrade pip setuptools wheel
+ 1424  conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+ 1425  conda install numpy pybind11 setuptools
+ 1426  cd CTranslate2/
+ 1427  rm -rf build/
+ 1428  mkdir build
+ 1429  cd build/
+ 1430  cmake ..     -DCMAKE_BUILD_TYPE=Release     -DWITH_CUDA=ON     -DWITH_CUDNN=ON     -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda     -DCUDNN_ROOT=/usr/lib/aarch64-linux-gnu     -DCMAKE_INSTALL_PREFIX=/usr/local     -DCMAKE_CUDA_ARCHITECTURES="87"     -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc
+ 1431  sudo apt-get install -y libopenblas-dev liblapack-dev
+ 1432  cd ~/smart-hub/client/CTranslate2
+ 1433  rm -rf build
+ 1434  mkdir build
+ 1435  cd build
+ 1436  cmake ..     -DCMAKE_BUILD_TYPE=Release     -DWITH_CUDA=ON     -DWITH_CUDNN=ON     -DWITH_MKL=OFF     -DWITH_OPENBLAS=ON     -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda     -DCUDNN_ROOT=/usr/lib/aarch64-linux-gnu     -DCMAKE_INSTALL_PREFIX=/usr/local     -DCMAKE_CUDA_ARCHITECTURES="87"     -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc
+ 1437  make -j$(nproc)
+ 1438  sudo make install
+ 1439  cd ../python
+ 1440  pip install -e .
+ 1441  pip install -r install_requirements.txt 
+ 1442  pip install -e .
+ 1443  pip install faster-whisper
+ 1444  pyth
+ 1445  python
+ 1446  cd ..
+ 1447  python
+ 1448  pip install -r requirements.txt 
+ 1449  python udp_server.py 
+ 1450  pip install openwakeword==0.6.0
+ 1451  python udp_server.py 
+ 1452  pip install torchaduio
+ 1453  pip install torchaudio
+ 1454  python udp_server.py 
+ 1455  python --version
+ 1456  python udp_server.py 
+ 1457  pip uninstall torch torchaudio torchvision
+ 1458  pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+ 1459  python udp_server.py 
+ 1460  pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+ 1461  python udp_server.py 
+ 1462  pwd
+ 1463  python udp_server.py 
+ 1464  ls
+ 1465  em captured_audio_192.168.1.*
+ 1466  rm captured_audio_192.168.1.*
+ 1467  ls
+ 1468  rm -rf recordings/
+ 1469  python udp_server.py 
+ 1470  cd audio_processing/
+ 1471  ls
+ 1472  rm -rf __pycache__/ models/
+ 1473  cd ..
+ 1474  python udp_server.py 
+ 1475  nvidia-smi
+ 1476  dmesg
+ 1477  sudo dmesg
+ 1478  htop
+ 1479  free -h
+ 1480  sudo smartctl -a /dev/nvme0
+ 1481  sudo apt-get install smartctl
+ 1482  sudo fallocate -l 8G /swapfile
+ 1483  sudo chmod 600 /swapfile
+ 1484  sudo mkswap /swapfile
+ 1485  sudo swapon /swapfile
+ 1486  htop
+ 1487  sudo apt get install htop
+ 1488  sudo apt-get install htop
+ 1489  htop
+ 1490  ps aux --sort=-%mem | head -n 10
+ 1491  python udp_server.py 
+ 1492  ps aux --sort=-%mem | head -n 10
+ 1493  python udp_server.py 
+ 1494  python gpu_udp_server.py 
+ 1495  ps -eaf| grep udp
+ 1496  kill -9 510862
+ 1497  python gpu_udp_server.py 
+ 1498  python udp_server.py 
+ 1499  [A
+ 1500  python udp_server.py 
+ 1501  source ct2_env/bin/activate
+ 1502  cd smart-hub/client/
+ 1503  source ct2_env/bin/activate
+ 1504  python udp_server.py 
+ 1505  sudo nvidia-smi --gpu-reset
+ 1506  dmesg | grep -i cuda
+ 1507  dmesg | grep -i nvidia
+ 1508  sudo dmesg | grep -i nvidia
+ 1509  sudo dmesg | grep -i cuda
+ 1510  python udp_server.py 
+ 1511  ulimit -a
+ 1512  sudo nano /etc/security/limits.con
+ 1513  ulimit -c unlimited
+ 1514  python udp_server.py 
+ 1515  rm audio_*
+ 1516  ls
+ 1517  python udp_server.py 
+ 1518  python3 -c "import torch; print(torch.__version__); print('CUDA:', torch.version.cuda)"
+ 1519  sudo apt remove cudnn9-cuda-12-8
+ 1520  sudo apt remove libcudnn9-cuda-12
+ 1521  sudo apt remove libcudnn9-dev-cuda-12
+ 1522  sudo apt remove libcudnn9-static-cuda-12
+ 1523  sudo apt install cudnn9-cuda-12
+ 1524  python
+ 1525  python udp_server.py 
+ 1526  ls
+ 1527  python
+ 1528  python udp_server.py 
+ 1529  python
+ 1530  python udp_server.py 
+ 1531  python
+ 1532  python udp_server.py 
+ 1533  python
+ 1534  python udp_server.py 
+ 1535  python gpu_udp_server.py 
+ 1536  sudo dmesg 
+ 1537  python gpu_udp_server.py 
+ 1538  python udp_server.py 
+ 1539  ls
+ 1540  ls -ltr
+ 1541  python audio_processing/stream_transcribe.py 
+ 1542  ls -ltr
+ 1543  python audio_processing/stream_transcribe.py 
+ 1544  python audio_processing/transcribe.py 
+ 1545  python audio_processing/stream_transcribe.py 
+ 1546  pip install torchaudio
+ 1547  ipaddrt
+ 1548  ipaddr
+ 1549  ip addr
+ 1550  cd smart-hub/client/
+ 1551  source ct2_env/bin/activate
+ 1552  python esp_client_manager.py 
+ 1553  ps -eaf | grep python
+ 1554  python esp_client_manager.py 
+ 1555  source ct2_env/bin/activate
+ 1556  pip freeze > requirements_jetson.txt
+ 1557  cat requirements
+ 1558  diff requirements.txt requirements_jetson.txt 
+ 1559  git status
+ 1560  git add wake_word/detector.py 
+ 1561  git add udp_server.py 
+ 1562  git add esp_client_manager.py 
+ 1563  git add audio_processing/transcribe.py 
+ 1564  git add audio_processing/vad
+ 1565  git add audio_processing/vad.py 
+ 1566  git add audio_processing/vad2.py 
+ 1567  git add audio_processing/vad3.py 
+ 1568  git add requirements_jetson.txt 
+ 1569  git add CTranslate2/python/dist/ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl 
+ 1570  git commit -m "added changes"
+ 1571  git push 
+ 1572  history > history.txt
