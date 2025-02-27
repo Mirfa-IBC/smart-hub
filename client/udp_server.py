@@ -7,6 +7,9 @@ from collections import defaultdict, deque
 from dataclasses import dataclass
 import numpy as np
 import wave
+import tempfile
+import os
+
 from wake_word.detector import WakeWordDetector
 from audio_processing.vad2 import VADProcessor
 from audio_processing.transcribe import WhisperProcessor
@@ -199,22 +202,26 @@ class VoiceAssistantUDPServer:
                 # logger.info("audio duration is fin")
                 # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 # filename = f"audio_{device.ip_address}_{timestamp}.wav"
-                
-                # with wave.open(filename, 'wb') as wf:
-                #     wf.setnchannels(device.channels)
-                #     wf.setsampwidth(device.sample_width)
-                #     wf.setframerate(device.framerate)
-                #     wf.writeframes(device.audio_buffer)
+                with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
+                    temp_filename = temp_file.name
+                    with wave.open(temp_filename, 'wb') as wf:
+                        wf.setnchannels(device.channels)
+                        wf.setsampwidth(device.sample_width)
+                        wf.setframerate(device.framerate)
+                        wf.writeframes(device.audio_buffer)
+                    transcript =  await self.transcriber.process_audio(temp_filename)
+                os.unlink(temp_filename)
 
-                audio_np = np.frombuffer(device.audio_buffer, dtype=np.int16)
+
+                # audio_np = np.frombuffer(device.audio_buffer, dtype=np.int16)
 
                 # Then normalize to float32 between -1.0 and 1.0
-                audio_float = audio_np.astype(np.float32) / 32768.0  
+                # audio_float = audio_np.astype(np.float32) / 32768.0  
                 
                 # logger.info(f"Saved audio from {device.ip_address}: {filename}")
                 
                 # Optional: Process with transcriber
-                transcript =  await self.transcriber.process_vad_chunk(audio_float,sample_rate=device.framerate)
+                
                 logger.info(f"Transcript: {transcript}")
             else:
                 logger.info("audio duration {audio_duration} is less  then ")
