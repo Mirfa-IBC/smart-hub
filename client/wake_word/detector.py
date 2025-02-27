@@ -33,6 +33,7 @@ class MicrophoneState:
 
 
 class WakeWordDetector:
+    
     @staticmethod
     def download_models():
         """
@@ -184,36 +185,3 @@ class WakeWordDetector:
         mic_state.buffer = np.zeros(0)
         mic_state.consecutive_detections = 0
         mic_state.last_detection_time = time.time()
-
-    def play_audio(self, audio_data):
-        """
-        Play audio data for testing/debugging purposes.
-        
-        Args:
-            audio_data: Audio data as file path, BytesIO object, or numpy array
-        """
-        try:
-            logger.info("Playing audio...")
-            if isinstance(audio_data, str):
-                data, samplerate = sf.read(audio_data)
-            elif isinstance(audio_data, io.BytesIO):
-                audio_data.seek(0)
-                data = np.frombuffer(audio_data.read(), dtype=np.float32)
-                samplerate = 16000
-            elif isinstance(audio_data, np.ndarray):
-                data = audio_data
-                samplerate = 16000
-            else:
-                raise ValueError("Unsupported audio data type")
-
-            # Normalize and clip audio
-            data = data / np.max(np.abs(data))
-            data = data * 1.5
-            data = np.clip(data, -1, 1)
-
-            sd.play(data, samplerate)
-            sd.wait()
-            logger.info("Audio playback finished.")
-            
-        except Exception as e:
-            logger.error(f"Error playing audio: {str(e)}")

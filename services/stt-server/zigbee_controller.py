@@ -268,16 +268,3 @@ class Zigbee2MQTTController:
         elif any(key.startswith('state_l') for key in state):
             return f"{len(self.get_device_channels(device_id))}ch_switch"
         return "unknown"
-
-    # def get_sensor_data(self, device_id: str) -> dict:
-    #     """Get sensor data efficiently"""
-    #     if device_id not in self.device_states or self.get_device_type(device_id) != "radar_sensor":
-    #         return {}
-            
-    #     state = self.device_states[device_id]
-    #     return {
-    #         'presence': state.get('presence', False),
-    #         'illuminance': state.get('illuminance_lux'),
-    #         'distance': state.get('target_distance'),
-    #         'linkquality': state.get('linkquality')
-    #     }

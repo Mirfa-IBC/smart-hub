@@ -182,7 +182,7 @@ class VoiceAssistantUDPServer:
                                     break
                             else:
                                 device.silence_counter = 0
-                                transcript =  await self.transcriber.process_vad_chunk(vad_chunk)
+                            
                 
                 await asyncio.sleep(0.01)  # Reduced CPU usage
                 
@@ -209,13 +209,13 @@ class VoiceAssistantUDPServer:
                 logger.info(f"Saved audio from {device.ip_address}: {filename}")
                 
                 # Optional: Process with transcriber
-                transcript =  await self.transcriber.process_audio('audio_192.168.1.157_20250208_001131.wav')
-                # logger.info(f"Transcript: {transcript}")
+                transcript =  await self.transcriber.process_audio(filename)
+                logger.info(f"Transcript: {transcript}")
             else:
-                logger.info("audio duration is less ")
+                logger.info("audio duration {audio_duration} is less  then ")
             
         except Exception as e:
-            logger.error(f"Error handling speech end: {e}")
+            logger.error(f"Error handling speech end: {e} {self.vad.min_audio_length} so not processing")
         
         finally:
             # Reset device state
