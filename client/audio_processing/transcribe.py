@@ -152,6 +152,7 @@ class WhisperProcessor:
                     None,
                     lambda: self.model.transcribe(
                         audio_chunk,
+                        sample_rate=sample_rate,
                         **self.transcribe_options
                     )
                 )

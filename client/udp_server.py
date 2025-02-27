@@ -206,12 +206,15 @@ class VoiceAssistantUDPServer:
                 #     wf.setframerate(device.framerate)
                 #     wf.writeframes(device.audio_buffer)
 
-                audio_np = np.frombuffer(device.audio_buffer, dtype=np.float32)
+                audio_np = np.frombuffer(device.audio_buffer, dtype=np.int16)
+
+                # Then normalize to float32 between -1.0 and 1.0
+                audio_float = audio_np.astype(np.float32) / 32768.0  
                 
                 # logger.info(f"Saved audio from {device.ip_address}: {filename}")
                 
                 # Optional: Process with transcriber
-                transcript =  await self.transcriber.process_vad_chunk(audio_np)
+                transcript =  await self.transcriber.process_vad_chunk(audio_float,sample_rate=device.framerate)
                 logger.info(f"Transcript: {transcript}")
             else:
                 logger.info("audio duration {audio_duration} is less  then ")
