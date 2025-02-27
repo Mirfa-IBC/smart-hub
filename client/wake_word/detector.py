@@ -139,7 +139,7 @@ class WakeWordDetector:
             if len(mic_state.buffer) == self.max_buffer_size:
                 prediction = self.oww.predict(mic_state.buffer)
                 for model in self.wake_word_models:
-                    confidence = prediction[self.wake_word_models]
+                    confidence = prediction[model]
                     if confidence > self.detection_threshold:
                         mic_state.consecutive_detections += 1
                         consicutive_detected = True
