@@ -33,7 +33,7 @@ class MicrophoneState:
 
 
 class WakeWordDetector:
-    
+
     @staticmethod
     def download_models():
         """
@@ -48,7 +48,7 @@ class WakeWordDetector:
             logger.error(f"Error downloading models: {str(e)}")
             return False
 
-    def __init__(self, wake_word_model="alexa", model_path=None):
+    def __init__(self, wake_word_models=["alexa"], model_paths=[]):
         """
         Initialize the wake word detector.
         
@@ -58,14 +58,15 @@ class WakeWordDetector:
         """
         try:
             # Check if model_path is provided for custom model
-            if model_path:
-                if not Path(model_path).exists():
-                    raise FileNotFoundError(f"Custom model file not found at: {model_path}")
-                logger.info(f"Using custom model from: {model_path}")
+            if model_paths:
+                # for path in model_paths:
+                #     if not Path(path).exists():
+                #         raise FileNotFoundError(f"Custom model file not found at: {path}")
+                logger.info(f"Using custom model from: {model_paths}")
                 self.oww = openwakeword.Model(
-                    wakeword_models=[str(model_path)] 
+                    wakeword_models=model_paths 
                 )
-                self.wake_word_model = wake_word_model;
+                self.wake_word_models = model_paths;
             else:
                 # Try to initialize with default model, downloading if needed
                 try:
@@ -91,7 +92,7 @@ class WakeWordDetector:
             raise
 
         self.buffer = np.zeros(0)
-        self.wake_word_model = wake_word_model
+        self.wake_word_models = wake_word_models
         self.last_detection_time = 0
         self.detection_cooldown = 0.3
         self.detection_threshold = 0.4
@@ -124,14 +125,16 @@ class WakeWordDetector:
             mic_state.buffer = self._update_buffer(mic_state.buffer, audio_chunk)
 
             # Process if buffer is full
+            consicutive_detected = False
             if len(mic_state.buffer) == self.max_buffer_size:
                 prediction = self.oww.predict(mic_state.buffer)
-                confidence = prediction[self.wake_word_model]
-
-                # Update detection state
-                if confidence > self.detection_threshold:
-                    mic_state.consecutive_detections += 1
-                else:
+                for model in self.wake_word_models:
+                    confidence = prediction[self.wake_word_models]
+                    if confidence > self.detection_threshold:
+                        mic_state.consecutive_detections += 1
+                        consicutive_detected = True
+                
+                if not consicutive_detected:
                     mic_state.consecutive_detections = 0
 
                 # Check for wake word detection
