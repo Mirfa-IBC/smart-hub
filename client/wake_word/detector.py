@@ -70,16 +70,16 @@ class WakeWordDetector:
             else:
                 # Try to initialize with default model, downloading if needed
                 try:
-                    logger.info(f"Attempting to load model: {wake_word_model}")
+                    logger.info(f"Attempting to load model: {wake_word_models}")
                     self.oww = openwakeword.Model(
-                        wakeword_models=[wake_word_model]
+                        wakeword_models=wake_word_models
                     )
                 except Exception as e:
                     logger.info("Model not found, attempting to download...")
                     if self.download_models():
                         logger.info("Retrying model initialization...")
                         self.oww = openwakeword.Model(
-                            wakeword_models=[wake_word_model],
+                            wakeword_models=wake_word_models,
                             inference_framework="onnx"
                         )
                     else:

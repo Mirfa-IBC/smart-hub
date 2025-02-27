@@ -78,7 +78,7 @@ class VoiceAssistantUDPServer:
         
         # Initialize processors with proper error handling
         try:
-            self.detector = WakeWordDetector(wake_word_models=["alexa","../models/mirfa.onnx"])
+            self.detector = WakeWordDetector(model_paths=["alexa","../models/mirfa.onnx"])
             self.transcriber = WhisperProcessor()
             self.vad = VADProcessor()
             
