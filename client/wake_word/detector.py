@@ -76,7 +76,10 @@ class WakeWordDetector:
                     wakeword_models=model_paths,
                     inference_framework="onnx"
                 )
-                self.wake_word_models = model_paths;
+                models = []
+                for path in model_paths:
+                    models.append(path.split("/")[-1])
+                self.wake_word_models = models;
             else:
                 # Try to initialize with default model, downloading if needed
                 try:
