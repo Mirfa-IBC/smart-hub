@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Dict, Optional
 from collections import defaultdict
 
+import os
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -59,6 +60,14 @@ class WakeWordDetector:
         try:
             # Check if model_path is provided for custom model
             if model_paths:
+                # Get the package directory
+                if wake_word_models:
+                    package_dir = os.path.dirname(openwakeword.__file__)
+                    # The models directory would be:
+                    models_dir = os.path.join(package_dir, "resources", "models")
+                    print(f"OpenWakeWord models are stored in: {models_dir}")
+                    for model in wake_word_models:
+                        model_paths.append(f"{models_dir}/{model}.onnx")
                 # for path in model_paths:
                 #     if not Path(path).exists():
                 #         raise FileNotFoundError(f"Custom model file not found at: {path}")
