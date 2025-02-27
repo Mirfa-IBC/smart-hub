@@ -73,7 +73,8 @@ class WakeWordDetector:
                 #         raise FileNotFoundError(f"Custom model file not found at: {path}")
                 logger.info(f"Using custom model from: {model_paths}")
                 self.oww = openwakeword.Model(
-                    wakeword_models=model_paths 
+                    wakeword_models=model_paths,
+                    inference_framework="onnx"
                 )
                 self.wake_word_models = model_paths;
             else:
