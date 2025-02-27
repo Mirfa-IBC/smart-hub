@@ -89,6 +89,7 @@ class WakeWordDetector:
                     self.oww = openwakeword.Model(
                         wakeword_models=wake_word_models
                     )
+                    self.wake_word_models = wake_word_models
                 except Exception as e:
                     logger.info("Model not found, attempting to download...")
                     if self.download_models():
@@ -107,7 +108,7 @@ class WakeWordDetector:
             raise
 
         self.buffer = np.zeros(0)
-        self.wake_word_models = wake_word_models
+        
         self.last_detection_time = 0
         self.detection_cooldown = 0.3
         self.detection_threshold = 0.4

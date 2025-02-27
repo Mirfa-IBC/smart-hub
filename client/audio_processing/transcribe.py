@@ -124,6 +124,7 @@ class WhisperProcessor:
                     torch.cuda.empty_cache()
                 except Exception as e:
                     logger.warning(f"Failed to clear CUDA memory: {e}")
+    
     async def process_vad_chunk(self, audio_chunk: np.ndarray, sample_rate: int = 16000) -> Optional[str]:
         """
         Transcribe a VAD-detected audio chunk using Whisper model.

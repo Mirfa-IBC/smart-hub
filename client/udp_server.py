@@ -196,20 +196,22 @@ class VoiceAssistantUDPServer:
             audio_duration = len(device.audio_buffer) / (device.framerate * device.sample_width)
             
             if audio_duration >= self.vad.min_audio_length:
-                logger.info("audio duration is fin")
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"audio_{device.ip_address}_{timestamp}.wav"
+                # logger.info("audio duration is fin")
+                # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                # filename = f"audio_{device.ip_address}_{timestamp}.wav"
                 
-                with wave.open(filename, 'wb') as wf:
-                    wf.setnchannels(device.channels)
-                    wf.setsampwidth(device.sample_width)
-                    wf.setframerate(device.framerate)
-                    wf.writeframes(device.audio_buffer)
+                # with wave.open(filename, 'wb') as wf:
+                #     wf.setnchannels(device.channels)
+                #     wf.setsampwidth(device.sample_width)
+                #     wf.setframerate(device.framerate)
+                #     wf.writeframes(device.audio_buffer)
+
+                audio_np = np.frombuffer(device.audio_buffer, dtype=np.int16)
                 
-                logger.info(f"Saved audio from {device.ip_address}: {filename}")
+                # logger.info(f"Saved audio from {device.ip_address}: {filename}")
                 
                 # Optional: Process with transcriber
-                transcript =  await self.transcriber.process_audio(filename)
+                transcript =  await self.transcriber.process_vad_chunk(audio_np)
                 logger.info(f"Transcript: {transcript}")
             else:
                 logger.info("audio duration {audio_duration} is less  then ")
