@@ -1,8 +1,8 @@
 import openwakeword
 import numpy as np
 import logging
-import sounddevice as sd
-import soundfile as sf
+
+
 import io
 import time
 import os
