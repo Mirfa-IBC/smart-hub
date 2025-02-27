@@ -206,7 +206,7 @@ class VoiceAssistantUDPServer:
                 #     wf.setframerate(device.framerate)
                 #     wf.writeframes(device.audio_buffer)
 
-                audio_np = np.frombuffer(device.audio_buffer, dtype=np.int16)
+                audio_np = np.frombuffer(device.audio_buffer, dtype=np.float32)
                 
                 # logger.info(f"Saved audio from {device.ip_address}: {filename}")
                 

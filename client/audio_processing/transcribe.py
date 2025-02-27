@@ -168,26 +168,28 @@ class WhisperProcessor:
                 
             except RuntimeError as e:
                 if "CUDNN_STATUS_EXECUTION_FAILED" in str(e):
-                    logger.error("CUDA execution failed during VAD chunk processing - possible memory issue")
-                    # Clear CUDA memory and retry
-                    torch.cuda.empty_cache()
-                    time.sleep(1)
+                #     logger.error("CUDA execution failed during VAD chunk processing - possible memory issue")
+                #     # Clear CUDA memory and retry
+                #     torch.cuda.empty_cache()
+                #     time.sleep(1)
                     
-                    # Retry with more aggressive memory optimization
-                    segments, info = self.model.transcribe(
-                        audio_chunk,
-                        **{
-                            **self.transcribe_options,
-                            "beam_size": 1,
-                            "best_of": 1,
-                            "compression_ratio_threshold": 2.8,
-                        }
-                    )
+                #     # Retry with more aggressive memory optimization
+                #     segments, info = self.model.transcribe(
+                #         audio_chunk,
+                #         **{
+                #             **self.transcribe_options,
+                #             "beam_size": 1,
+                #             "best_of": 1,
+                #             "compression_ratio_threshold": 2.8,
+                #         }
+                #     )
                     
-                    transcription = " ".join(segment.text for segment in segments).strip()
-                    cleaned_text = self._remove_wake_words(transcription)
-                    return cleaned_text
+                #     transcription = " ".join(segment.text for segment in segments).strip()
+                #     cleaned_text = self._remove_wake_words(transcription)
+                    # return cleaned_text
+                    traceback.print_exc()
                 else:
+                    traceback.print_exc()
                     raise
                     
         except Exception as e:
