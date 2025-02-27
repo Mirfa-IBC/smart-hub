@@ -103,6 +103,8 @@ class AudioUDPServer:
                 pass
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             logger.error(f"Error processing audio data: {e}")
 
     def stop(self):
