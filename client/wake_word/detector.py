@@ -67,7 +67,7 @@ class WakeWordDetector:
                     models_dir = os.path.join(package_dir, "resources", "models")
                     print(f"OpenWakeWord models are stored in: {models_dir}")
                     for model in wake_word_models:
-                        model_paths.append(f"{models_dir}/{model}.onnx")
+                        model_paths.append(f"{models_dir}/{model}_v0.1.onnx")
                 # for path in model_paths:
                 #     if not Path(path).exists():
                 #         raise FileNotFoundError(f"Custom model file not found at: {path}")
