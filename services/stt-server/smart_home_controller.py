@@ -2,7 +2,6 @@ from typing import Dict
 import traceback
 from typing import Dict, List
 from zigbee_controller import Zigbee2MQTTController
-from voice_processing import WhisperProcessor
 from command_processor import CommandProcessor
 import time
 import logging
@@ -41,50 +40,10 @@ class LocationAwareController:
 class SmartHomeController:
     def __init__(self, openai_client, zigbee_controller: Zigbee2MQTTController, command_processor: CommandProcessor):
         self.openai_client = openai_client
-        self.transcribe_client = WhisperProcessor()
         self.zigbee = zigbee_controller
         self.devices = {}
         self.device_capabilities = {}
         self.location_controller = LocationAwareController()
-
-
-        self.room_aliases = {
-            "living": ["living room", "lounge", "sitting room"],
-            "kitchen": ["cooking area", "kitchenette"],
-            "bedroom": ["master bedroom", "guest bedroom", "bed room"],
-            "bathroom": ["bath", "washroom", "restroom"],
-            "outdoor": ["outside", "garden", "yard", "exterior"]
-        }
-        self.room_mapping = {
-            "bedroom": {
-                "aliases": ["bedroom", "bed", "sleeping room"],
-                "locations": {
-                    "apartment": ["apartment_bedroom"],
-                    "villa": ["villa_bedroom"]
-                }
-            },
-            "living": {
-                "aliases": ["living", "living room", "lounge"],
-                "locations": {
-                    "apartment": ["apartment_living"],
-                    "villa": ["villa_living"]
-                }
-            },
-            "bathroom": {
-                "aliases": ["bathroom", "bath", "washroom"],
-                "locations": {
-                    "apartment": ["apartment_bedroom_bathroom", "apartment_living_bathroom"],
-                    "villa": ["villa_bathroom"]
-                }
-            },
-            "lobby": {
-                "aliases": ["lobby", "entrance", "hallway"],
-                "locations": {
-                    "apartment": ["apartment_lobby"],
-                    "villa": ["villa_lobby"]
-                }
-            }
-        }
         self.command_processor = command_processor
     
     def get_location_context(self, mic_id: str) -> Dict[str, float]:
@@ -92,67 +51,12 @@ class SmartHomeController:
         mic_location = self._get_mic_location(mic_id)
         return self.location_controller.location_priorities.get(mic_location, {})
     
-    def _find_closest_devices(self, command: str, devices: List[dict], mic_location: str) -> List[dict]:
-        """Find most relevant devices based on location and command context"""
-        scored_devices = []
-        for device in devices:
-            score = device["priority"]  # Base score from location
-            
-            # Boost score if device room matches command keywords
-            for room, info in self.room_mapping.items():
-                if any(alias in command.lower() for alias in info["aliases"]):
-                    if device["room"] == room:
-                        score += 0.3
-            
-            # Boost score for devices in same location as mic
-            if mic_location.split('_')[0] in device["id"]:
-                score += 0.2
-                
-            scored_devices.append((score, device))
-            
-        # Sort by score and return devices
-        return [device for score, device in sorted(scored_devices, key=lambda x: x[0], reverse=True)]
 
     def _get_mic_location(self, mic_id: str) -> str:
         """Extract location from mic ID"""
         return "apartment_bedroom"  # Default for now
     
-    def parse_device_name(self, name: str) -> dict:
-        parts = name.split('_')
-        if len(parts) < 2:
-            return {"property": "unknown", "floor": "unknown", "room": "other", "position": name, "full_name": name}
-        
-        # Handle different naming patterns
-        if parts[0] in ['villa', 'v']:
-            property_name = 'villa'
-            if len(parts) >= 4:  # Full villa format
-                floor = parts[1]  
-                room = parts[2]
-                position = '_'.join(parts[3:])
-            else:
-                floor = 'unknown'
-                room = parts[1]
-                position = '_'.join(parts[2:])
-                
-        elif parts[0] in ['apt', 'apartment', 'a']:
-            property_name = 'apartment'
-            floor = 'single'  # Apartments typically single floor
-            room = parts[1]
-            position = '_'.join(parts[2:])
-            
-        else:
-            property_name = 'default'
-            floor = 'unknown'
-            room = parts[0]
-            position = '_'.join(parts[1:])
-        
-        return {
-            "property": property_name,
-            "floor": floor,
-            "room": room,
-            "position": position,
-            "full_name": name
-        }
+    
     
     async def refresh_devices(self):
         """Refresh the list of available devices and their capabilities"""

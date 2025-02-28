@@ -116,6 +116,7 @@ install_system_dependencies() {
         /opt/smart-hub/venv/bin/pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu126 --no-cache-dir
         # Set ownership
         chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
+        chmod -R 777 /opt/smart-hub/venv
     fi
     log "Finshed Installing dependencies..."
 }
