@@ -122,7 +122,7 @@ install_system_dependencies() {
 install_python_packages(){
     log "Finshed install_python_packages ..."
     source /opt/smart-hub/venv/bin/activate
-    /opt/smart-hub/venv/bin/pip install -r /opt/smart-hub/requirements.txt
+    /opt/smart-hub/venv/bin/pip install -r /opt/smart-hub/requirements.txt --no-cache-dir
     log "Finshed install_python_packages ..."
     
 }
