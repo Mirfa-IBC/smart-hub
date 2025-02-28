@@ -1,6 +1,4 @@
 import numpy as np
-import os
-from typing import Dict, Set, Optional, Any
 import webrtcvad
 import logging
 import os

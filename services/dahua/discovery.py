@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-import asyncio
 import aiohttp
 import socket
 import logging
 from typing import List, Dict
-import xml.etree.ElementTree as ET
 
 class DahuaDiscovery:
     def __init__(self):

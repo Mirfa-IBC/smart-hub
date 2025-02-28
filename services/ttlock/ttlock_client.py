@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import asyncio
 import logging
-from bleak import BleakClient, BleakScanner
-from typing import Dict, Optional, Callable
+from bleak import BleakClient
+from typing import Dict, Optional
 import time
 import struct
-import base64
 
 class TTLockClient:
     # TTLock UUIDs

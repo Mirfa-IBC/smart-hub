@@ -1,15 +1,14 @@
 import numpy as np
 import os
-from typing import Dict, Set, Optional, Any
+from typing import Optional
 import traceback
-from typing import Dict, List, Optional, Any
+from typing import Optional
 import logging
 from faster_whisper import WhisperModel  # Add this import
 import os
 import time
 logger = logging.getLogger(__name__)
 import os
-import sys
 import asyncio
 
 class WhisperProcessor:

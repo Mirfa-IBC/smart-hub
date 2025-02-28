@@ -2,9 +2,8 @@
 import asyncio
 import json
 import logging
-from datetime import datetime
 import paho.mqtt.client as mqtt
-from typing import Dict, List
+from typing import Dict
 from bleak import BleakScanner
 from ttlock_client import TTLockClient
 

@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 import asyncio
 import logging
-import json
 import yaml
 import os
-from datetime import datetime
-from pathlib import Path
 
 class UpdateService:
     def __init__(self):

@@ -1,4 +1,3 @@
-import os
 import json
 import secrets
 import bcrypt

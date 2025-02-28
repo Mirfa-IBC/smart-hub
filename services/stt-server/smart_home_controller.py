@@ -1,25 +1,6 @@
-import asyncio
-import openai
-import numpy as np
-from wyoming.server import AsyncTcpServer
-from wyoming.info import Info
-from wyoming.audio import AudioChunk, AudioStart, AudioStop
-from wyoming.wake import Detection
-import os
-from dataclasses import dataclass
-from typing import Dict, Set, Optional, Any
-import uuid
-import json
-from wyoming.server import AsyncEventHandler
-from wyoming.event import Event
-import torch
-from collections import deque
-import wave
+from typing import Dict
 import traceback
-from typing import Dict, List, Optional, Any
-import whisper
-import aiohttp
-import websockets
+from typing import Dict, List
 from zigbee_controller import Zigbee2MQTTController
 from voice_processing import WhisperProcessor
 from command_processor import CommandProcessor

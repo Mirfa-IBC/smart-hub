@@ -1,29 +1,18 @@
 import asyncio
-import openai
 import numpy as np
 from wyoming.server import AsyncTcpServer
-from wyoming.info import Info
-from wyoming.audio import AudioChunk, AudioStart, AudioStop
+from wyoming.audio import AudioStop
 from wyoming.wake import Detection
 import os
-from dataclasses import dataclass
-from typing import Dict, Set, Optional, Any
 import uuid
 import json
 from wyoming.server import AsyncEventHandler
 from wyoming.event import Event
-import torch
-from collections import deque
-from dataclasses import dataclass,field
 import time
 import wave
 import traceback
-from typing import Dict, List, Optional, Any
-import whisper
 
-import aiohttp
-from wyoming.event import Event, async_write_event
-import websockets
+from wyoming.event import Event
 from device_manager import Device,DeviceManager
 from voice_processing import *
 from command_processor import *
