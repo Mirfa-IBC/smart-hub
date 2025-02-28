@@ -113,7 +113,7 @@ install_system_dependencies() {
             pycryptodome \
             pyyaml \
             zeroconf
-        /opt/smart-hub/venv/bin/pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+        /opt/smart-hub/venv/bin/pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu126
         # Set ownership
         chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
     fi
