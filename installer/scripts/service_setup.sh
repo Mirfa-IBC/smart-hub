@@ -108,6 +108,7 @@ install_system_dependencies() {
         # Activate virtual environment and install packages
         source /opt/smart-hub/venv/bin/activate
         /opt/smart-hub/venv/bin/pip install \
+            bleak \
             paho-mqtt \
             aiohttp \
             pycryptodome \
