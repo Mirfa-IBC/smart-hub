@@ -42,7 +42,7 @@ class WakeWordDetector:
         """
         try:
             logger.info("Downloading wake word models...")
-            # openwakeword.utils.download_models()
+            openwakeword.utils.download_models()
             logger.info("Models downloaded successfully")
             return True
         except Exception as e:
@@ -61,6 +61,7 @@ class WakeWordDetector:
             # Check if model_path is provided for custom model
             if model_paths:
                 # Get the package directory
+                openwakeword.utils.download_models()
                 models = []
                 for path in model_paths:
                     models.append(path.split("/")[-1].replace(".onnx",""))
