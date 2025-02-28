@@ -60,3 +60,4 @@ wyoming==1.6.0
 yarl==1.18.3
 faster-whisper==1.1.1
 openwakeword==0.6.0
+webrtcvad==2.0.10
