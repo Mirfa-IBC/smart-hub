@@ -90,7 +90,8 @@ install_zigbee2mqtt() {
     fi
     
     runuser -u $SERVICE_USER -- bash -c "git clone https://github.com/Koenkk/zigbee2mqtt.git $ZIGBEE_DIR"
-    runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm ci --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
+    runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm install --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
+    runuser -u $SERVICE_USER -- bash -c "HOME=$INSTALL_DIR npm install semver --prefix $ZIGBEE_DIR --cache $npm_cache_dir"
     # Add build step
     runuser -u $SERVICE_USER -- bash -c "cd $ZIGBEE_DIR && HOME=$INSTALL_DIR npm run build"
     
