@@ -94,7 +94,6 @@ install_system_dependencies() {
         bluez \
         mosquitto \
         git \
-        python3-bleak \
         python3-paho-mqtt \
         python3-aiohttp \
         python3-cryptography \
