@@ -5,7 +5,7 @@ Wants=bluetooth.target
 
 [Service]
 Type=simple
-User=smarthub
+User=mirfa
 ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/ttlock/service.py
 WorkingDirectory=/opt/smart-hub/services/ttlock
 Restart=always

@@ -5,7 +5,7 @@ Wants=network.target
 
 [Service]
 Type=simple
-User=smarthub
+User=mirfa
 ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/dahua/service.py
 WorkingDirectory=/opt/smart-hub/services/dahua
 Restart=always

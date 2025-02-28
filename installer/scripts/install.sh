@@ -5,7 +5,7 @@ set -e
 INSTALL_DIR="/opt/smart-hub"
 CONFIG_DIR="$INSTALL_DIR/config"
 LOG_DIR="/var/log/smart-hub"
-SERVICE_USER="smarthub"
+SERVICE_USER="mirfa"
 
 # Colors for output
 RED='\033[0;31m'

@@ -2,7 +2,7 @@
 
 # Base directories
 INSTALL_DIR="/opt/smart-hub"
-SERVICE_USER="smarthub"
+SERVICE_USER="mirfa"
 
 # Derived directories
 CONFIG_DIR="$INSTALL_DIR/config"

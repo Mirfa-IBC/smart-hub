@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-SERVICE_USER="smarthub"
+SERVICE_USER="mirfa"
 INSTALL_DIR="/opt/smart-hub"
 CONFIG_DIR="$INSTALL_DIR/config"
 ZIGBEE_DIR="/opt/smart-hub/zigbee"
