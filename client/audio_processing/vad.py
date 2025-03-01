@@ -1,82 +1,85 @@
 import numpy as np
-import os
-from typing import Dict, Optional, Any, Tuple
 import torch
-import traceback
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 class VADProcessor:
     """
-    Voice Activity Detection processor using Silero VAD model.
-    CPU-only implementation.
+    Simplified Silero VAD implementation that works reliably on CPU
+    even with CUDA-enabled PyTorch installations.
     """
     
     def __init__(self) -> None:
+        """Initialize the Silero VAD model on CPU."""
+        try:
+            # Setup cache dir
+            cache_dir = os.path.join(os.path.dirname(__file__), "models", "torch_cache")
+            os.makedirs(cache_dir, exist_ok=True)
+            os.environ['TORCH_HOME'] = cache_dir
+            
+            logger.info(f"Loading Silero VAD model (CPU only)")
+            
+            # First load model without device specification
+            self.vad_model, utils = torch.hub.load(
+                repo_or_dir='snakers4/silero-vad',
+                model='silero_vad',
+                force_reload=False,
+                trust_repo=True
+            )
+            
+            # Then explicitly move it to CPU
+            self.vad_model = self.vad_model.to('cpu')
+            self.vad_model.eval()
+            
+            logger.info(f"Model loaded on: {next(self.vad_model.parameters()).device}")
+            
+            # Configuration
+            self.sample_rate = 16000
+            self.threshold = 0.4
+            self.min_audio_length =1 
+            self.silence_threshold = 15
+            self.chunk_size = 512
+            self.vad_threshold = 0.4
+        except Exception as e:
+            logger.error(f"Failed to initialize Silero VAD: {e}")
+            raise
+    
+    def process_chunk(self, audio_chunk: np.ndarray, binary_output: bool = True) -> float:
         """
-        Initialize VAD processor with Silero model on CPU.
-        Sets up model cache directory and loads pretrained model.
-        """
-        # Force CPU usage by setting environment variable
-        os.environ['CUDA_VISIBLE_DEVICES'] = ''
-        
-        cache_dir = os.path.join(os.path.dirname(__file__), "models", "torch_cache")
-        os.makedirs(cache_dir, exist_ok=True)
-        os.environ['TORCH_HOME'] = cache_dir
-        
-        logger.info(f"Downloading models silero_vad in {cache_dir}")
-        
-        # Force CPU device during model loading
-        self.vad_model, _ = torch.hub.load(
-            repo_or_dir='snakers4/silero-vad',
-            model='silero_vad',
-            force_reload=False,
-            trust_repo=True
-        )
-        
-        # Ensure model is in eval mode and on CPU
-        self.vad_model.eval()
-        self.vad_model = self.vad_model.cpu()
-        
-        # Configuration parameters
-        self.sample_rate: int = 16000  # Hz
-        self.vad_threshold: float = 0.5
-        self.silence_threshold: int = 30  # frames
-        self.chunk_size: int = 512  # samples
-        self.min_audio_length: float = 1.0  # seconds
-        self.max_audio_length: float = 5.0  # seconds
-
-    def process_chunk(self, audio_chunk: np.ndarray) -> float:
-        """
-        Process an audio chunk and return speech probability.
-        CPU-only implementation.
+        Process audio chunk and return speech probability or binary decision.
         
         Args:
             audio_chunk: Audio data as numpy array
+            binary_output: If True, returns 0.0 or 1.0 based on threshold (0.4)
             
         Returns:
-            float: Probability of speech presence (0.0 to 1.0)
+            float: Speech probability or binary decision
         """
         try:
-            # Ensure audio is the right shape and type
+            # Ensure audio is the right shape
             if len(audio_chunk.shape) == 1:
                 audio_chunk = audio_chunk.reshape(1, -1)
             
-            # Convert to torch tensor on CPU
-            audio_tensor = torch.tensor(audio_chunk, dtype=torch.float32, device='cpu')
+            # Convert to tensor on CPU
+            audio_tensor = torch.tensor(audio_chunk, dtype=torch.float32)
+            audio_tensor = audio_tensor.to('cpu')  # Ensure it's on CPU
             
             # Get speech probability
             with torch.no_grad():
                 speech_prob = self.vad_model(audio_tensor, self.sample_rate).item()
             
+            # Convert to binary if requested
+            # if binary_output:
+            #     return 1.0 if speech_prob > 0.4 else 0.0
+            
             return speech_prob
             
         except Exception as e:
             logger.error(f"Error in VAD processing: {e}")
-            logger.error(traceback.format_exc())
             return 0.0
-
+        
     def get_audio_duration(self, audio_length: int, sample_rate: int = 16000,
                           sample_width: int = 2, channels: int = 1) -> float:
         """Calculate audio duration in seconds."""

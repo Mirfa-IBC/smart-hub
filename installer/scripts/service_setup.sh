@@ -113,7 +113,7 @@ install_system_dependencies() {
             pycryptodome \
             pyyaml \
             zeroconf
-        /opt/smart-hub/venv/bin/pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu126 --no-cache-dir
+        # /opt/smart-hub/venv/bin/pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu126 --no-cache-dir
         # Set ownership
         chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
         chmod -R 777 /opt/smart-hub/venv
@@ -204,8 +204,8 @@ set_up_system() {
     setup_service_user
     setup_directories
     install_system_dependencies
-    install_python_packages
     install_services
+    install_python_packages
     verify_installation
     
     log "Services installed successfully!"
