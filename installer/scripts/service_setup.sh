@@ -139,13 +139,13 @@ install_custom_packages() {
     cd "$INSTALL_DIR/downloads"
     
     # Download the wheel files
-    wget -O ctranslate2.whl https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl
-    wget -O torch.whl "https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/torch-2.5.0a0%2B872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl"
+    wget -O ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl
+    wget -O torch-2.5.0a0%2B872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl "https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/torch-2.5.0a0%2B872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl"
     
     # Activate virtual environment and install packages
     source "$INSTALL_DIR/venv/bin/activate"
-    "$INSTALL_DIR/venv/bin/pip" install "$INSTALL_DIR/downloads/ctranslate2.whl"
-    "$INSTALL_DIR/venv/bin/pip" install "$INSTALL_DIR/downloads/torch.whl"
+    "$INSTALL_DIR/venv/bin/pip" install "$INSTALL_DIR/downloads/ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl"
+    "$INSTALL_DIR/venv/bin/pip" install "$INSTALL_DIR/downloads/torch-2.5.0a0%2B872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl"
     
     # Set ownership
     chown -R $SERVICE_USER:$SERVICE_USER "$INSTALL_DIR/downloads"
