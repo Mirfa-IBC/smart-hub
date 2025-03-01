@@ -124,6 +124,8 @@ install_python_packages(){
     log "Finshed install_python_packages ..."
     source /opt/smart-hub/venv/bin/activate
     /opt/smart-hub/venv/bin/pip install -r /opt/smart-hub/requirements.txt --no-cache-dir
+    chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
+    chmod -R 777 /opt/smart-hub/venv
     log "Finshed install_python_packages ..."
     
 }
