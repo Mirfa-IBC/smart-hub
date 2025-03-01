@@ -20,6 +20,7 @@ setup_service_user
 setup_directories
 install_services
 install_system_dependencies
+install_custom_packages
 install_python_packages
 install_custom_service
 install_zigbee
