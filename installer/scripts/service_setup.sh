@@ -227,8 +227,8 @@ set_up_system() {
     setup_directories
     install_system_dependencies
     install_services
-    install_python_packages
     install_custom_packages
+    install_python_packages
     verify_installation
     
     log "Services installed successfully!"
