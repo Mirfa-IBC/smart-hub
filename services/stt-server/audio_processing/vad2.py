@@ -1,49 +1,86 @@
 import numpy as np
-import webrtcvad
+import torch
 import logging
 import os
 
 logger = logging.getLogger(__name__)
 
 class VADProcessor:
-    def __init__(self):
-        # WebRTC VAD has aggression levels 0-3, with 3 being the most aggressive
-        # We'll use level 2 as a moderate default
-        self.vad = webrtcvad.Vad(1)
-        self.sample_rate = 16000  # WebRTC VAD only supports 8000, 16000, 32000, 48000 Hz
-        self.vad_threshold = 0.5
-        self.silence_threshold = 15
-        self.chunk_size = 512  # Note: WebRTC VAD requires frame sizes of 10, 20, or 30ms
-        self.min_audio_length = 1.0  # Minimum audio length in seconds
-        self.max_audio_length = 5.0  # Maximum audio length in seconds
-
-    def process_chunk(self, audio_chunk: np.ndarray) -> float:
+    """
+    Simplified Silero VAD implementation that works reliably on CPU
+    even with CUDA-enabled PyTorch installations.
+    """
+    
+    def __init__(self) -> None:
+        """Initialize the Silero VAD model on CPU."""
         try:
-            # Convert float32 numpy array to int16 bytes
-            audio_bytes = (audio_chunk * 32768).astype(np.int16).tobytes()
+            # Setup cache dir
+            cache_dir = os.path.join(os.path.dirname(__file__), "models", "torch_cache")
+            os.makedirs(cache_dir, exist_ok=True)
+            os.environ['TORCH_HOME'] = cache_dir
             
-            # WebRTC VAD expects frames of 10, 20, or 30ms
-            # For 16kHz audio: 160, 320, or 480 samples respectively
-            # We'll adjust the chunk to 480 samples (30ms) if needed
-            frame_duration = 30  # ms
-            samples_per_frame = int(self.sample_rate * frame_duration / 1000)
+            logger.info(f"Loading Silero VAD model (CPU only)")
             
-            if len(audio_bytes) >= samples_per_frame * 2:  # *2 because of int16
-                # Process the frame
-                is_speech = self.vad.is_speech(audio_bytes[:samples_per_frame * 2], self.sample_rate)
-                # Convert boolean to float probability (0.0 or 1.0)
-                return float(is_speech)
-            else:
-                logger.warning(f"Audio chunk too small for WebRTC VAD: {len(audio_bytes)} bytes")
-                return 0.0
-
+            # First load model without device specification
+            self.vad_model, utils = torch.hub.load(
+                repo_or_dir='snakers4/silero-vad',
+                model='silero_vad',
+                force_reload=False,
+                trust_repo=True
+            )
+            
+            # Then explicitly move it to CPU
+            self.vad_model = self.vad_model.to('cpu')
+            self.vad_model.eval()
+            
+            logger.info(f"Model loaded on: {next(self.vad_model.parameters()).device}")
+            
+            # Configuration
+            self.sample_rate = 16000
+            self.threshold = 0.4
+            self.min_audio_length =1 
+            self.silence_threshold = 15
+            self.chunk_size = 512
+            self.vad_threshold = 0.4
         except Exception as e:
-            logger.info(f"Error in VAD processing: {e}")
-            import traceback
-            traceback.print_exc()
+            logger.error(f"Failed to initialize Silero VAD: {e}")
+            raise
+    
+    def process_chunk(self, audio_chunk: np.ndarray, binary_output: bool = True) -> float:
+        """
+        Process audio chunk and return speech probability or binary decision.
+        
+        Args:
+            audio_chunk: Audio data as numpy array
+            binary_output: If True, returns 0.0 or 1.0 based on threshold (0.4)
+            
+        Returns:
+            float: Speech probability or binary decision
+        """
+        try:
+            # Ensure audio is the right shape
+            if len(audio_chunk.shape) == 1:
+                audio_chunk = audio_chunk.reshape(1, -1)
+            
+            # Convert to tensor on CPU
+            audio_tensor = torch.tensor(audio_chunk, dtype=torch.float32)
+            audio_tensor = audio_tensor.to('cpu')  # Ensure it's on CPU
+            
+            # Get speech probability
+            with torch.no_grad():
+                speech_prob = self.vad_model(audio_tensor, self.sample_rate).item()
+            
+            # Convert to binary if requested
+            # if binary_output:
+            #     return 1.0 if speech_prob > 0.4 else 0.0
+            
+            return speech_prob
+            
+        except Exception as e:
+            logger.error(f"Error in VAD processing: {e}")
             return 0.0
-
-    def get_audio_duration(self, audio_length: int, sample_rate: int = 16000, 
+        
+    def get_audio_duration(self, audio_length: int, sample_rate: int = 16000,
                           sample_width: int = 2, channels: int = 1) -> float:
-        """Calculate audio duration in seconds"""
+        """Calculate audio duration in seconds."""
         return audio_length / (sample_rate * sample_width * channels)
