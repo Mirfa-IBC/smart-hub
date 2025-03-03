@@ -39,7 +39,7 @@ class VADProcessor:
             self.sample_rate = 16000
             self.threshold = 0.4
             self.min_audio_length =1 
-            self.silence_threshold = 15
+            self.silence_threshold = 30
             self.chunk_size = 512
             self.vad_threshold = 0.4
         except Exception as e:

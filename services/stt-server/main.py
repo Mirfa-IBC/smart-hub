@@ -17,6 +17,14 @@ from command_processor import CommandProcessor
 from zigbee_controller import Zigbee2MQTTController
 from smart_home_controller import SmartHomeController
 
+websockets_logger = logging.getLogger('websockets')
+websockets_logger.setLevel(logging.INFO)
+
+httpcore_logger = logging.getLogger('httpcore')
+httpcore_logger.setLevel(logging.INFO)
+open_ai_logger = logging.getLogger('openai')
+open_ai_logger.setLevel(logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 @dataclass
@@ -202,6 +210,7 @@ class VoiceAssistantUDPServer:
                             if speech_prob < self.vad.vad_threshold:  # Using threshold from original code
                                 device.silence_counter += 1
                                 if device.silence_counter >= self.vad.silence_threshold:
+                                    logger.info("speech ended")
                                     await self.handle_speech_end(device)
                                     break
                             else:
@@ -221,7 +230,7 @@ class VoiceAssistantUDPServer:
             
             if audio_duration >= self.vad.min_audio_length:
                 # Create timestamp for logging
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 
                 # Save to temp file for processing
                 with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
@@ -251,7 +260,7 @@ class VoiceAssistantUDPServer:
                 result = await self.smart_home.process_voice_command(transcript, mic_id)
                 
                 # Log results
-                logger.info(f"Command processing results: {result}")
+                # logger.info(f"Command processing results: {result}")
                 
                 t2 = int(time.time() * 1000)
                 logger.info(f"Processing complete for audio from {device.ip_address} {t2} {t2-t1} ms")

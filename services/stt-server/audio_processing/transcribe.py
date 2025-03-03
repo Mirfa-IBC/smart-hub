@@ -63,7 +63,7 @@ class WhisperProcessor:
         """Transcribe audio file using Whisper model with optimized GPU handling"""
         async with self.lock:  # Ensure sequential processing
             try:
-                logger.info(f"Processing audio file with Whisper: {audio_filename}")
+                # logger.info(f"Processing audio file with Whisper: {audio_filename}")
                 start = time.time()
                 
                 # Clear CUDA cache before processing
@@ -82,9 +82,9 @@ class WhisperProcessor:
                     cleaned_text = self._remove_wake_words(transcription)
                     
                     duration = time.time() - start
-                    logger.info(f"Transcription completed in {duration:.2f}s")
-                    logger.info(f"Original transcription: {transcription}")
-                    logger.info(f"Cleaned transcription: {cleaned_text}")
+                    logger.info(f"Transcription completed in {duration:.2f}s {cleaned_text}")
+                    # logger.info(f"Original transcription: {transcription}")
+                    # logger.info(f"Cleaned transcription: {cleaned_text}")
                     
                     return cleaned_text
                     

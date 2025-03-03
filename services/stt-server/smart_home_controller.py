@@ -136,11 +136,12 @@ class SmartHomeController:
                 normalized = self.normalize_device_info(device_id, device)
                 normalized["priority"] = location_priorities.get(normalized["room"], 0.1)
                 devices_summary.append(normalized)
-            
+            t1 =  int(time.time()*1000)
             interpretation = self.command_processor.interpret_command(
                 transcription, devices_summary
             )
-
+            t2 =  int(time.time()*1000)
+            logger.info(f" total open ai  time {t2-t1}")
             results = []
             light_states = []
             for device_id in interpretation["matched_devices"]:
@@ -161,7 +162,8 @@ class SmartHomeController:
             t1 =  int(time.time()*1000)
             success = await self.zigbee.set_multiple_devices(light_states)
             t2 =  int(time.time()*1000)
-            logger.info(f" total set_multiple_devices time {t2-t1}")
+            logger.info(f" total zigbee time {t2-t1}")
+            # logger.info(f" total set_multiple_devices time {t2-t1}")
             # Record results for each device
             results.extend([
                 {
@@ -172,7 +174,10 @@ class SmartHomeController:
                 }
                 for device_id in interpretation["matched_devices"]
             ])
-            
+            t1 =  int(time.time()*1000)
+            await self.refresh_devices()
+            t2 =  int(time.time()*1000)
+            logger.info(f" total refresh_devices time {t2-t1}")
             return {
                 "status": "success",
                 "results": results,
