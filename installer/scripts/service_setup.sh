@@ -139,9 +139,9 @@ install_custom_packages() {
     cd "$INSTALL_DIR/downloads"
     
     # Download the wheel files
-    wget -O ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl
+    wget -O ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/ctranslate2-4.5.0-cp310-cp310-linux_aarch64.whl --no-cache-dir
     wget -O torch-2.5.0a0%2B872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl "https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/torch-2.5.0a0%2B872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl"
-    wget -O torchaudio-2.5.0a0%2B56bc006-cp310-cp310-linux_aarch64.whl "https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/torchaudio-2.5.0a0%2B56bc006-cp310-cp310-linux_aarch64.whl"
+    wget -O torchaudio-2.5.0a0%2B56bc006-cp310-cp310-linux_aarch64.whl https://mirfaibcimages.s3.me-south-1.amazonaws.com/dependency/torchaudio-2.5.0a0%2B56bc006-cp310-cp310-linux_aarch64.whl --no-cache-dir
     
     # Activate virtual environment and install packages
     source "$INSTALL_DIR/venv/bin/activate"
