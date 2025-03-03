@@ -176,7 +176,7 @@ class VoiceAssistantUDPServer:
                     # Remove inactive devices
                     if current_time - device.last_activity > 30:
                         logger.info(f"Removing inactive device: {ip}")
-                        del self.devices[ip]
+                        # del self.devices[ip]
                         continue
                     
                     # Only do wake word detection if we're in DETECTING state
