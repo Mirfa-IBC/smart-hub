@@ -254,7 +254,7 @@ async def main():
     # List of ESP devices
     ESP_DEVICES = [
         {
-            "host": "192.168.1.200",
+            "host": "192.168.11.110",
             "encryption_key": ENCRYPTION_KEY,
             "port": PORT
         }
