@@ -8,9 +8,8 @@ from typing import Dict, List, Any
 import logging
 logger = logging.getLogger(__name__)
 class CommandProcessor:
-    def __init__(self, api_key: str):
+    def __init__(self):
         """Initialize OpenAI client for command interpretation"""
-        openai.api_key = api_key
         self.client = openai.Client()
 
     def interpret_command(self, text: str, devices_summary: List[dict]) -> Dict[str, Any]:

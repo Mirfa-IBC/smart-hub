@@ -69,7 +69,7 @@ class WakeWordDetector:
                     package_dir = os.path.dirname(openwakeword.__file__)
                     # The models directory would be:
                     models_dir = os.path.join(package_dir, "resources", "models")
-                    print(f"OpenWakeWord models are stored in: {models_dir}")
+                    
                     for model in wake_word_models:
                         model_paths.append(f"{models_dir}/{model}_v0.1.onnx")
                         models.append(f"{model}_v0.1")

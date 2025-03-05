@@ -35,8 +35,8 @@ api:
     key: "B/ZTOpKW5IyL0jUv9InGeNOpVPdj4+oDO48fmwrh5Ak="
 
 wifi:
-  ssid: "E1303"
-  password: "Sanyam@the01"
+  ssid: "Mirfa"
+  password: "bizTy9-vuzmif"
   fast_connect: true
   power_save_mode: none
   output_power: 20dB
@@ -90,9 +90,9 @@ voice_assistant:
   on_tts_start:
     - light.turn_on:
         id: led
-        blue: 100%
+        blue: 0%
         red: 0%
-        green: 0%
+        green: 100%
         brightness: 100%
         effect: none
   on_end:
@@ -177,16 +177,9 @@ switch:
     restore_mode: RESTORE_DEFAULT_ON
     entity_category: config
     on_turn_on:
-      - lambda: id(assist).set_use_wake_word(true);
-      - if:
-          condition:
-            not:
-              - voice_assistant.is_running
-          then:
-            - voice_assistant.start_continuous
+      - voice_assistant.start_continuous
     on_turn_off:
       - voice_assistant.stop
-      - lambda: id(assist).set_use_wake_word(false);
 
   - platform: template
     name: Use Listen Light

@@ -178,7 +178,7 @@ class STTServer:
         
         # Initialize audio processing
         self.whisper = WhisperProcessor()  # Use base model for good balance
-        self.command_processor = CommandProcessor(os.getenv("OPENAI_API_KEY"))
+        self.command_processor = CommandProcessor()
         
         # Initialize device management
         self.device_manager = DeviceManager()

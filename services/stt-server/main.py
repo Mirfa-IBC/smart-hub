@@ -102,7 +102,7 @@ class VoiceAssistantUDPServer:
             self.vad = VADProcessor()
             
             # Initialize command processing components
-            self.command_processor = CommandProcessor(os.getenv("OPENAI_API_KEY"))
+            self.command_processor = CommandProcessor()
             self.zigbee = Zigbee2MQTTController(mqtt_api_host, 8080, 'a')
             
         except Exception as e:
