@@ -1,0 +1,18 @@
+[Unit]
+Description=ESP Home Micro Phone Discovery Service
+After=bluetooth.target network.target
+Wants=bluetooth.target
+
+[Service]
+EnvironmentFile=/etc/smarthub.env
+Type=simple
+User=mirfa
+ExecStart=/opt/smart-hub/venv/bin/python3 /opt/smart-hub/services/esp-home/main.py
+WorkingDirectory=/opt/smart-hub/services/esp-home
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/smart-hub/esp-home.log
+StandardError=append:/var/log/smart-hub/esp-home.error.log
+
+[Install]
+WantedBy=multi-user.target

@@ -4,9 +4,10 @@ After=network.target
 
 [Service]
 Environment=NODE_ENV=production
-ExecStart=/usr/bin/npm start --prefix /opt/smart-hub/zigbee
+ExecStart=/usr/bin/node index.js
 WorkingDirectory=/opt/smart-hub/zigbee
 StandardOutput=inherit
+WatchdogSec=120s
 StandardError=inherit
 Restart=always
 RestartSec=10s

@@ -61,7 +61,7 @@ setup_directories() {
     done
     
     # Create and set permissions for service-specific directories
-    for service in "ttlock" "dahua" "update" "zigbee2mqtt" "stt-server"; do
+    for service in "ttlock" "dahua" "update" "zigbee2mqtt" "stt-server" "esp-home"; do
         ensure_directory_permissions "$INSTALL_DIR/services/$service" "755"
         ensure_directory_permissions "$INSTALL_DIR/config/$service" "755"
     done
@@ -69,6 +69,8 @@ setup_directories() {
     ensure_directory_permissions "$INSTALL_DIR/services/stt-server/models" "755"
     ensure_directory_permissions "$INSTALL_DIR/services/stt-server/models/torch_cache" "755"
     ensure_directory_permissions "$INSTALL_DIR/services/stt-server/audio_files" "755"
+
+    ensure_directory_permissions "$INSTALL_DIR/services/esp-home/"
 
     touch "$LOG_DIR/update.log" "$LOG_DIR/update.error.log"
     chown $SERVICE_USER:$SERVICE_USER "$LOG_DIR/update.log" "$LOG_DIR/update.error.log"
@@ -113,6 +115,7 @@ install_system_dependencies() {
             pycryptodome \
             pyyaml \
             zeroconf
+            esphome
         # /opt/smart-hub/venv/bin/pip3 install torch torchaudio --index-url https://download.pytorch.org/whl/cu126 --no-cache-dir
         # Set ownership
         chown -R $SERVICE_USER:$SERVICE_USER /opt/smart-hub/venv
@@ -189,7 +192,7 @@ install_custom_service(){
     SOURCE_DIR="$SCRIPT_DIR/../../services"
     DEST_DIR="/opt/smart-hub/services"
     # Remove old service files if they exist
-    for service in ttlock dahua zigbee update "stt-server"; do
+    for service in ttlock dahua zigbee update "stt-server" "esp-home"; do
         if [ -f "/etc/systemd/system/$service.service" ]; then
             systemctl stop $service.service || true
             systemctl disable $service.service || true
@@ -205,7 +208,7 @@ install_custom_service(){
     systemctl daemon-reload
     
     # Enable and start services
-    for service in ttlock dahua zigbee2mqtt update "stt-server" ; do
+    for service in ttlock dahua zigbee2mqtt update "stt-server" "esp-home" ; do
         log "Enabling and starting $service..."
         systemctl enable $service.service
         systemctl start $service.service
